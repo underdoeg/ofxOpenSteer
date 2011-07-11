@@ -7,7 +7,7 @@ using namespace OpenSteer;
 AVGroup ofxVehicle::neighbors;
 
 
-ofxVehicle::ofxVehicle()
+ofxVehicle::ofxVehicle():isWandering(false)
 {
 	reset();
 }
@@ -27,7 +27,7 @@ void ofxVehicle::onReset()
 	isFollowingPath=false;
 	isWandering=false;
 	setSpeed(0);
-	setMaxForce(30000);      // steering force is clipped to this magnitude
+	setMaxForce(10000);      // steering force is clipped to this magnitude
 	setMaxSpeed(50);
 
 	setUp(Vec3(0,0,1));
@@ -69,13 +69,6 @@ Vec3 ofxVehicle::getSteeringDirection(const float elapsedTime)
 
 	const float leakThrough = 0.1f;
 
-	// find all neighbors within maxRadius using proximity database
-	// (radius is largest distance between vehicles traveling head-on
-	// where a collision is possible within caLeadTime seconds.)
-	const float maxRadius = caLeadTime * maxSpeed() * 2;
-	neighbors.clear();
-	proximityToken->findNeighbors (position(), maxRadius, neighbors);
-
 	Vec3 obstacleAvoidance;
 	if (leakThrough < frandom01()) {
 		obstacleAvoidance = steerToAvoidObstacles (6, obstacles);
@@ -85,18 +78,23 @@ Vec3 ofxVehicle::getSteeringDirection(const float elapsedTime)
 	if (obstacleAvoidance != Vec3::zero) {
 		steeringForce += obstacleAvoidance;
 	} else {
-
+		if(isWandering)
+			steeringForce += steerForWander (elapsedTime);
 		//CHECK FOR COLLISION WITH NEIGHBORS
+
+		// find all neighbors within maxRadius using proximity database
+		// (radius is largest distance between vehicles traveling head-on
+		// where a collision is possible within caLeadTime seconds.)
+		const float maxRadius = caLeadTime * maxSpeed() * 3;
+		neighbors.clear();
+		proximityToken->findNeighbors (position(), maxRadius, neighbors);
 		if (leakThrough < frandom01())
-			collisionAvoidance = steerToAvoidNeighbors (caLeadTime, neighbors) * 2000;
+			collisionAvoidance = steerToAvoidNeighbors (caLeadTime, neighbors) * 40000;
 
 		if (collisionAvoidance != Vec3::zero) {
 			steeringForce += collisionAvoidance;
 		} else {
-			if(isWandering)
-				steeringForce += steerForWander (elapsedTime);
 			if(isFollowingPath) { //KEEP ON PATH IF NECESSARY
-				//steeringForce += steerForWander (elapsedTime);
 				// do (interactively) selected type of path following
 				const float pfLeadTime = 7;
 				const Vec3 pathFollow =steerToFollowPath(1, pfLeadTime, *path);
@@ -112,10 +110,16 @@ Vec3 ofxVehicle::getSteeringDirection(const float elapsedTime)
 
 void ofxVehicle::draw()
 {
-	drawBasic2dCircularVehicle(*this, Color(120));
-	ofNoFill();
-	ofColor(120);
+	//drawBasic2dCircularVehicle(*this, Color(120));
+	ofSetColor(255, 255, 255);
+	ofSetCircleResolution(8);
 	ofCircle(getPosition(), getRadius());
+	Vec3 f=forward();
+	Vec3 p=position();
+	f*=radius();
+	Vec3 fp=f+p;
+	ofSetColor(255, 0, 0);
+	ofLine(p.x, p.y , fp.x, fp.y);
 }
 
 ofVec3f ofxVehicle::getPosition()
@@ -147,4 +151,8 @@ void ofxVehicle::setProximityDatabase(ProximityDatabase* db)
 void ofxVehicle::addObstacle(ofxOpenSteerObstacle* o)
 {
 	obstacles.push_back(o);
+}
+void ofxVehicle::setWandering(bool wand)
+{
+	isWandering=true;
 }
