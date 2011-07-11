@@ -1,0 +1,54 @@
+This is not really a complete addon but rather a starting point on how to integrate OpenSteer (http://opensteer.sourceforge.net/) with openframeworks 0.07 (https://github.com/openframeworks/openFrameworks).
+
+Very basic usage:
+
+[CODE]
+
+ofEasyCam cam;
+ofxOpenSteer steer;
+ofPolyline pl;
+
+void steerApp::setup(){
+	
+	cam.enableMouseInput();
+	//cam.setTarget(ofVec3f(ofGetWidth()*.3, ofGetHeight()*.3, 1));
+	
+	
+	for(unsigned int i=0;i<20;i++){
+		pl.addVertex(ofGetWidth()/20.f*i*ofRandom(.9, 1.1)*3, ofGetHeight()/20.f*i*ofRandom(.9, 1.1)*3, 0);
+	}
+	
+	ofxOpenSteerPath* op=ofxOpenSteer::convertPolyLine(pl.getVertices());
+	
+	ofxOpenSteerObstacle* o=ofxOpenSteer::createSphereObstacle(ofPoint(ofGetWidth(), ofGetHeight()),200);
+	
+	for(unsigned int i=0;i<300;i++){
+		ofxVehicle* v = steer.createVehicle();
+		v->setRadius(ofRandom(5, 9));
+		v->setMass(20);
+		v->setPosition(ofGetWidth()*ofRandom(1),ofGetHeight()*ofRandom(1));
+		//v->setPosition(ofRandom(ofGetWidth()), ofRandom(ofGetHeight()));
+		v->followPath(op);
+		v->addObstacle(o);
+		v->setWandering(true);
+	}
+}
+
+//--------------------------------------------------------------
+void steerApp::update(){
+	steer.update();
+}
+
+//--------------------------------------------------------------
+void steerApp::draw(){
+	ofDrawBitmapString(ofToString(ofGetFrameRate()), 20, 20);	
+	cam.begin();
+	ofTranslate(-ofGetWidth()*.5, -ofGetHeight()*.5, 0);
+	steer.draw();
+	pl.draw();		
+}
+
+[/CODE]
+
+Should result in something like this:
+http://www.flickr.com/photos/underdoeg/5926753772/in/photostream

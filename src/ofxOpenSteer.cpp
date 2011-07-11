@@ -42,6 +42,7 @@ void ofxOpenSteer::draw()
 		(*i)->draw ();
 	}
 	ofSetColor(120, 120, 120);
+	ofNoFill();
 	for(unsigned int i=0;i<sphereObstacles.size();i++){
 		ofCircle(convertOpenSteerVec(sphereObstacles[i]->center), sphereObstacles[i]->radius);
 	}
