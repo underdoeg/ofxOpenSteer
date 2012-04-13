@@ -3,9 +3,9 @@
 #include "SimpleVehicle.h"
 #include "PolylineSegmentedPathwaySingleRadius.h"
 
-class ofxVehicle;
+class ofxOpenSteerVehicle;
 
-typedef std::vector<ofxVehicle*> vehicleList;
+typedef std::vector<ofxOpenSteerVehicle*> vehicleList;
 typedef vehicleList::iterator vehicleIterator;
 typedef OpenSteer::AbstractProximityDatabase<OpenSteer::AbstractVehicle*> ProximityDatabase;
 typedef OpenSteer::AbstractTokenForProximityDatabase<OpenSteer::AbstractVehicle*> ProximityToken;

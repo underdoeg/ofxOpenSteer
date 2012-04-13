@@ -353,7 +353,7 @@ OpenSteer::Vec3
 OpenSteer::SteerLibraryMixin<Super>::
 steerForFlee (const Vec3& target)
 {
-    const Vec3 desiredVelocity = position - target;
+    const Vec3 desiredVelocity = position() - target;
     return desiredVelocity - velocity();
 }
 
