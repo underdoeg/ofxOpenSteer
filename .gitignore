@@ -1,0 +1,27 @@
+# Mac OS X
+*.pbxuser
+*.mode1v3
+*.mode2v3
+.DS_Store
+*.app
+*.build
+*.swp
+*~.nib
+*.xcuserstate
+*.xcworkspace
+*.xcuserdata
+
+# Windows
+*.ini
+*.user
+*.suo
+*.ncb
+*.sdf
+*.opensdf
+*.exe
+*/obj/
+*/bin/*.exp
+*/bin/*.lib
+*/bin/*.pdb
+*/bin/*.ilk
+*/bin/*.dll
