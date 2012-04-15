@@ -15,7 +15,7 @@ class ofxOpenSteerVehicle: public OpenSteer::SimpleVehicle{
         virtual void update();
         virtual void update(float curTime, float elapsedTime);
         virtual void draw();    
-        virtual Vec3 getSteeringDirection(const float elapsedTime);
+        virtual Vec3 getSteeringForce(const float elapsedTime);
         
         virtual void setProximityDatabase(ProximityDatabase* db);
         virtual ProximityDatabase* getProximityDatabase();

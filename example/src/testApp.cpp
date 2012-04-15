@@ -12,27 +12,58 @@ void testApp::setup(){
 	// we wanna make sure our camera is close enough
 	cam.setDistance(50);
 	
-	flocking.setup();
+	
+	// add teh simulations to the vector and initialize the first one
+	simulations.push_back(&flocking);
+	simulations.push_back(&pathFollowing);
+	
+	currentSimulation = NULL;
+	setSimulation(0);
 }
 
 void testApp::update(){
-	flocking.update();
+	currentSimulation->update();
 }
 
 void testApp::draw(){
 	cam.begin();
-		flocking.draw();
+		currentSimulation->draw();
 	cam.end();
 	
 	ofSetColor(0);
 	stringstream ss;
-	ss << "Simulation: " << flocking.name() << "\n";
+	ss << "Simulation (" << ofToString(simulationIndex + 1) << "/" << ofToString(simulations.size()) <<"): " << currentSimulation->name() << "\n";
 	ss << "FPS: " << ofToString(ofGetFrameRate()) << "\n";
-	ss << "Drag mouse to move camera\n";
+	ss << "Press left/right to switch between simulations.\n";
+	ss << "Drag mouse to move camera.\n";
 	
 	ofDrawBitmapString(ss.str(), 10.f,20.f);
 }
 
 void testApp::keyPressed( int key ){
 	
+	if( key == OF_KEY_LEFT ){
+		simulationIndex--;
+		if(simulationIndex < 0) simulationIndex = simulations.size() - 1;
+		setSimulation(simulationIndex);
+	}
+	else if( key == OF_KEY_RIGHT ){
+		simulationIndex++;
+		if(simulationIndex > simulations.size() - 1) simulationIndex = 0;
+		setSimulation(simulationIndex);
+	}
+}
+
+void testApp::setSimulation( int simulationIndex ){
+	// just make sure we are inside out vector
+	this->simulationIndex = ofClamp(simulationIndex, 0, simulations.size() - 1);
+	
+	// exit the current simulation
+	if(currentSimulation) currentSimulation->exit();
+	
+	// define the current simulation
+	currentSimulation = simulations[simulationIndex];
+	
+	// initialize the current simulation
+	currentSimulation->setup();
 }

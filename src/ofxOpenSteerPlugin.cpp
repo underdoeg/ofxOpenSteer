@@ -45,19 +45,20 @@ void ofxOpenSteerPlugin::draw(){
 }
 void ofxOpenSteerPlugin::exit(){
 	// delete the proximity database
-	delete proximityDB;
+	if(proximityDB) delete proximityDB;
 	proximityDB = NULL;
 	
 	// clear vehicles
-	if (vehicles.size() > 0){
+	while (vehicles.size() > 0){
 		const AbstractVehicle* v = (AbstractVehicle*)vehicles.back();
 		vehicles.pop_back();
 		delete v;
 	}
 }
 
-void ofxOpenSteerPlugin::addVehicle(ofxOpenSteerVehicle* v){
+void ofxOpenSteerPlugin::addVehicle(ofxOpenSteerVehicle* v, bool reset){
 	v->setProximityDatabase(proximityDB);
+	if(reset) v->reset();
 	vehicles.push_back(v);
 }
 void ofxOpenSteerPlugin::removeVehicle(ofxOpenSteerVehicle* v){

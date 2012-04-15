@@ -24,7 +24,7 @@ public:
 	void open() { return setup(); };
 	void close() { return exit(); };
     
-    virtual void addVehicle(ofxOpenSteerVehicle* v);
+    virtual void addVehicle(ofxOpenSteerVehicle* v, bool reset = true);
     virtual void removeVehicle(ofxOpenSteerVehicle* v);
     virtual vehicleList getVehicles();
 	

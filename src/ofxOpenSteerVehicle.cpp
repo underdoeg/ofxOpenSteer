@@ -24,18 +24,18 @@ void ofxOpenSteerVehicle::update(){
 	update(ofGetElapsedTimef(), 1.f/ofGetFrameRate());
 }
 void ofxOpenSteerVehicle::update(float curTime, float elapsedTime){
-	applySteeringForce (getSteeringDirection (elapsedTime), elapsedTime);
+	applySteeringForce (getSteeringForce (elapsedTime), elapsedTime);
 	if(proximityToken) proximityToken->updateForNewPosition (position());
 	
 	recordTrailVertex (curTime, position());	
 }
 void ofxOpenSteerVehicle::draw(){    
 	
-	drawBasic3dSphericalVehicle (*this, gBlack);
+	drawBasic3dSphericalVehicle (*this, gGray30);
 	annotationVelocityAcceleration ();
 	drawTrail();
 }
-Vec3 ofxOpenSteerVehicle::getSteeringDirection(const float elapsedTime){
+Vec3 ofxOpenSteerVehicle::getSteeringForce(const float elapsedTime){
 	return Vec3(0, 0, 0);
 }
 
