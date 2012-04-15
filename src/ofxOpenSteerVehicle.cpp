@@ -12,7 +12,9 @@ ofxOpenSteerVehicle::ofxOpenSteerVehicle(){
     reset();
 }
 ofxOpenSteerVehicle::~ofxOpenSteerVehicle(){
-	delete proximityToken;
+	proximityDB = NULL;
+	path = NULL;
+	if(proximityToken) delete proximityToken;
 }
 
 void ofxOpenSteerVehicle::reset(){
@@ -38,7 +40,7 @@ Vec3 ofxOpenSteerVehicle::getSteeringDirection(const float elapsedTime){
 }
 
 void ofxOpenSteerVehicle::setProximityDatabase(ProximityDatabase* db){
-	proximityDB=db;
+	proximityDB = db;
 	proximityToken = proximityDB->allocateToken (this);
 }
 ProximityDatabase* ofxOpenSteerVehicle::getProximityDatabase(){

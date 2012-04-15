@@ -81,12 +81,13 @@ public:
 class Flocking: public ofxOpenSteerPlugin {
 
     public:
+		string name(){ return "Flocking"; };
         void setup(){       
 			ofBackground(255, 255, 0);
 			
             for(unsigned int i=0;i<300;i++){
                 Boid* v = new Boid();
-                addVehicle((ofxOpenSteerVehicle*)v);
+                addVehicle(v);
             }
         };
 

@@ -23,6 +23,14 @@ void testApp::draw(){
 	cam.begin();
 		flocking.draw();
 	cam.end();
+	
+	ofSetColor(0);
+	stringstream ss;
+	ss << "Simulation: " << flocking.name() << "\n";
+	ss << "FPS: " << ofToString(ofGetFrameRate()) << "\n";
+	ss << "Drag mouse to move camera\n";
+	
+	ofDrawBitmapString(ss.str(), 10.f,20.f);
 }
 
 void testApp::keyPressed( int key ){
