@@ -4,6 +4,7 @@ using namespace OpenSteer;
 using namespace ofxOpenSteer;
 
 ofxOpenSteerPlugin::ofxOpenSteerPlugin(){
+	drawPhaseActive = true;
 	createProximityDatabase();
 }
 ofxOpenSteerPlugin::~ofxOpenSteerPlugin(){

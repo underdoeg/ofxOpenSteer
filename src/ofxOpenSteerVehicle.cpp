@@ -12,6 +12,7 @@ ofxOpenSteerVehicle::ofxOpenSteerVehicle(){
     reset();
 }
 ofxOpenSteerVehicle::~ofxOpenSteerVehicle(){
+	delete proximityToken;
 }
 
 void ofxOpenSteerVehicle::reset(){
@@ -22,30 +23,18 @@ void ofxOpenSteerVehicle::update(){
 }
 void ofxOpenSteerVehicle::update(float curTime, float elapsedTime){
 	applySteeringForce (getSteeringDirection (elapsedTime), elapsedTime);
-	recordTrailVertex (curTime, position());
-	proximityToken->updateForNewPosition (position());
+	if(proximityToken) proximityToken->updateForNewPosition (position());
+	
+	recordTrailVertex (curTime, position());	
 }
 void ofxOpenSteerVehicle::draw(){    
-	ofSetColor(255);
-	ofCircle(getPosition(), radius());
-	Vec3 f = forward() * radius();
-	Vec3 p = position();
-	Vec3 fp = f + p;
-	ofSetColor(0);
-	ofLine(p.x, p.y , fp.x, fp.y);
+	
+	drawBasic3dSphericalVehicle (*this, gBlack);
+	annotationVelocityAcceleration ();
+	drawTrail();
 }
 Vec3 ofxOpenSteerVehicle::getSteeringDirection(const float elapsedTime){
 	return Vec3(0, 0, 0);
-}
-
-void ofxOpenSteerVehicle::setPosition(ofPoint position){
-	setPosition(position.x, position.y, position.z);
-}
-void ofxOpenSteerVehicle::setPosition(float x, float y, float z){
-	SimpleVehicle::setPosition(Vec3(x, y, z));
-}
-ofPoint ofxOpenSteerVehicle::getPosition(){
-	return toOf(position());
 }
 
 void ofxOpenSteerVehicle::setProximityDatabase(ProximityDatabase* db){

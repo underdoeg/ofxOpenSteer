@@ -21,6 +21,13 @@ namespace ofxOpenSteer {
         }
         return new ofxOpenSteerPath (points.size(),pathPoints,radius,false);
     };
+	static ofxOpenSteerPath* createPath(ofPolyline points, float radius=3){
+        Vec3* pathPoints = new Vec3 [points.size()];
+        for(unsigned int i = 0; i<points.size(); i++) {
+            pathPoints[i] = toOpenSteer(points[i]);
+        }
+        return new ofxOpenSteerPath (points.size(),pathPoints,radius,false);
+    };
     
     static ofxOpenSteerSphereObstacle* createSphereObstacle(ofPoint center, float radius){
         ofxOpenSteerSphereObstacle* ret = new ofxOpenSteerSphereObstacle();
@@ -29,4 +36,5 @@ namespace ofxOpenSteer {
         return ret;
     }
 	//static ofxOpenSteerRectObstacle* createRectObstacle(ofRectangle r);  
+
 };
