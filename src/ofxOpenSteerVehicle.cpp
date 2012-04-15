@@ -18,7 +18,8 @@ ofxOpenSteerVehicle::~ofxOpenSteerVehicle(){
 }
 
 void ofxOpenSteerVehicle::reset(){
-	SimpleVehicle::reset();    
+	SimpleVehicle::reset();  
+	clearTrailHistory();
 }
 void ofxOpenSteerVehicle::update(){
 	update(ofGetElapsedTimef(), 1.f/ofGetFrameRate());

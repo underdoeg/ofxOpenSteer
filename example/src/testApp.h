@@ -3,6 +3,7 @@
 #include "ofMain.h"
 #include "Flocking.h"
 #include "PathFollowing.h"
+#include "ObstacleAvoidance.h"
 
 class testApp : public ofBaseApp{
 
@@ -17,6 +18,7 @@ class testApp : public ofBaseApp{
 	
         Flocking flocking;
 		PathFollowing pathFollowing;
+		ObstacleAvoidance obstacleAvoidance;
 	
 		vector<ofxOpenSteerPlugin*> simulations;
 		ofxOpenSteerPlugin* currentSimulation;

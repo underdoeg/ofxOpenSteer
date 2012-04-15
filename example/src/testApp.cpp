@@ -13,9 +13,10 @@ void testApp::setup(){
 	cam.setDistance(50);
 	
 	
-	// add teh simulations to the vector and initialize the first one
+	// add the simulations to the vector and initialize the first one
 	simulations.push_back(&flocking);
 	simulations.push_back(&pathFollowing);
+	simulations.push_back(&obstacleAvoidance);
 	
 	currentSimulation = NULL;
 	setSimulation(0);
