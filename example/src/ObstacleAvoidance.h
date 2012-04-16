@@ -22,7 +22,7 @@ class ObstacleBoid: public Boid {
             setPosition (*origin - RandomVectorInUnitRadiusSphere());
             
             // notify proximity database that our position has changed
-            if(proximityToken) proximityToken->updateForNewPosition (position());
+            if(pt) pt->updateForNewPosition (position());
         };
         
         Vec3 getSteeringForce(const float elapsedTime){
@@ -54,6 +54,12 @@ public:
 	
 	float radius;
 	SphereObstacle* obstacle;
+    
+    ProximityDatabase* pd;
+    
+    ObstacleAvoidance(){
+        pd = NULL;  
+    };
 	
 	string name(){ return "Obstacle Avoidance"; };
 	
@@ -69,9 +75,13 @@ public:
 		// Create the obstacle
 		radius = 10;		
 		obstacle = new SphereObstacle(radius, Vec3::zero);
+        
+        // Create a proximity database with default settings
+        pd = createProximityDatabase();
 		
 		for(unsigned int i=0;i<100;i++){
 			ObstacleBoid* v = new ObstacleBoid();
+            v->pt = allocateProximityToken(pd, v);
             v->origin = &origin;
             v->target = &target;
 			v->addObstacle(obstacle);
@@ -94,6 +104,9 @@ public:
 		ofxOpenSteerPlugin::exit();
 		if(obstacle) delete obstacle;
 		obstacle = NULL;
+        
+        if(pd) delete pd;
+        pd = NULL;
 	}
 	
 };

@@ -29,7 +29,7 @@ public:
         setPosition (Vec3( (ofRandom(1.f) < 0.5) ? -10:10,0,0) + RandomVectorInUnitRadiusSphere());
         
         // notify proximity database that our position has changed
-        if(proximityToken) proximityToken->updateForNewPosition (position());
+        if(pt) pt->updateForNewPosition (position());
     };
     
     Vec3 getSteeringForce(const float elapsedTime){
@@ -71,7 +71,6 @@ public:
     Victim(){
         color = gGreen;
         predators = NULL;
-        reset();
     };
     
     ~Victim(){
@@ -86,7 +85,7 @@ public:
         setPosition (RandomVectorInUnitRadiusSphere());
         
         // notify proximity database that our position has changed
-        if(proximityToken) proximityToken->updateForNewPosition (position());
+        if(pt) pt->updateForNewPosition (position());
     };
     
     Vec3 getSteeringForce(const float elapsedTime){
@@ -124,6 +123,14 @@ public:
 
 	VehicleGroup victims;
     VehicleGroup predators;
+    
+    ProximityDatabase* pdPredators;
+    ProximityDatabase* pdVictims;
+    
+    PursuitAndEvade(){
+        pdPredators = NULL;  
+        pdVictims = NULL;  
+    };
 	
 	string name(){ return "Pursuit and Evade"; };
 	
@@ -132,9 +139,14 @@ public:
 		
 		ofBackground(255, 127, 0);
         
+        // Create a proximity databases
+        pdPredators = createProximityDatabase();
+        pdVictims = createProximityDatabase();
+        
         // Create the predators
 		for(unsigned int i=0;i<5;i++){
 			Predator* v = new Predator();
+            v->pt = allocateProximityToken(pdPredators, v);
             v->reset();
 			addVehicle(v);
             predators.push_back(v);
@@ -143,6 +155,7 @@ public:
         // Create the victims
 		for(unsigned int i=0;i<30;i++){
 			Victim* v = new Victim();
+            v->pt = allocateProximityToken(pdVictims, v);
             v->reset();
 			addVehicle(v);
             victims.push_back(v);
@@ -172,6 +185,12 @@ public:
         while (victims.size() > 0){
             victims.pop_back();
         }
+        
+        if(pdPredators) delete pdPredators;
+        pdPredators = NULL;
+        
+        if(pdVictims) delete pdVictims;
+        pdVictims = NULL;
 	}
 	
 };

@@ -9,6 +9,8 @@ using namespace ofxOpenSteer;
 // Extend the flocking boid adding path following behaviour
 class PathBoid: public Boid {
 public:
+    
+    SteerPath* path;
 	
 	void reset(){
 		// reset the vehicle
@@ -18,7 +20,7 @@ public:
 		setPosition (RandomVectorInUnitRadiusSphere() * 100);
 		
 		// notify proximity database that our position has changed
-		if(proximityToken) proximityToken->updateForNewPosition (position());
+		if(pt) pt->updateForNewPosition (position());
 	};
 	
 	Vec3 getSteeringForce(const float elapsedTime){
@@ -40,6 +42,11 @@ public:
 	
 	ofPath circle;
 	SteerPath* path;
+    ProximityDatabase* pd;
+    
+    PathFollowing(){
+        pd = NULL;  
+    };
 	
 	string name(){ return "Path Following"; };
 	
@@ -47,7 +54,10 @@ public:
 		ofxOpenSteerPlugin::setup();
 		
 		ofBackground(0, 255, 255);
-		
+        
+        // Create a proximity database with default settings;
+		pd = createProximityDatabase();
+        
 		// Create a path
         circle.clear();
         circle.setFilled(false);
@@ -58,8 +68,9 @@ public:
 		
 		for(unsigned int i=0;i<100;i++){
 			PathBoid* v = new PathBoid();
+            v->setPath(path);
+            v->pt = allocateProximityToken(pd, v);
             v->reset();
-			v->setPath(path);
 			addVehicle(v);
 		}
 	};
@@ -73,6 +84,9 @@ public:
 		ofxOpenSteerPlugin::exit();
 		if(path) delete path;
 		path = NULL;
+        
+        if(pd) delete pd;
+        pd = NULL;
 	}
 	
 };
