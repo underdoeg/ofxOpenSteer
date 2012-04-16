@@ -48,8 +48,10 @@ public:
 		ofBackground(0, 255, 255);
 		
 		// Create a path
+        circle.clear();
+        circle.setFilled(false);
 		circle.arc(ofPoint(), 20, 20, 0, 360);
-		circle.setFilled(false);
+		circle.close();
 		
 		path = createPath(circle.getOutline()[0], 1.5); // polyline, radius
 		
