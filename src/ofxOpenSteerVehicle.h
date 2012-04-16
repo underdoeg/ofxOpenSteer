@@ -21,8 +21,8 @@ class ofxOpenSteerVehicle: public OpenSteer::SimpleVehicle{
         virtual ProximityDatabase* getProximityDatabase();
         virtual ProximityToken* getProximityToken();
         
-        virtual void setPath(ofxOpenSteerPath* path);
-        virtual ofxOpenSteerPath* getPath();
+        virtual void setPath(SteerPath* path);
+        virtual SteerPath* getPath();
         virtual void unsetPath();
             
         virtual void addObstacle(Obstacle* o);
@@ -30,9 +30,10 @@ class ofxOpenSteerVehicle: public OpenSteer::SimpleVehicle{
         virtual ObstacleGroup getObstacles();
         
     protected:
+        Color color; // XXX Just a convenience in case we want to use the default drawing method
         static AVGroup neighbors;
         ProximityDatabase* proximityDB;
         ProximityToken* proximityToken;
-        ofxOpenSteerPath* path;
+        SteerPath* path;
         ObstacleGroup obstacles;
 };

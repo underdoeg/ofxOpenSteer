@@ -4,6 +4,7 @@
 #include "Flocking.h"
 #include "PathFollowing.h"
 #include "ObstacleAvoidance.h"
+#include "PursuitAndEvade.h"
 
 class testApp : public ofBaseApp{
 
@@ -19,6 +20,7 @@ class testApp : public ofBaseApp{
         Flocking flocking;
 		PathFollowing pathFollowing;
 		ObstacleAvoidance obstacleAvoidance;
+        PursuitAndEvade pursuitAndEvade;
 	
 		vector<ofxOpenSteerPlugin*> simulations;
 		ofxOpenSteerPlugin* currentSimulation;

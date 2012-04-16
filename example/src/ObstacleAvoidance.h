@@ -75,6 +75,7 @@ public:
             v->origin = &origin;
             v->target = &target;
 			v->addObstacle(obstacle);
+            v->reset();
 			addVehicle(v);
 		}
 	};

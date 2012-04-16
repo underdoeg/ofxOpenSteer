@@ -9,6 +9,7 @@ ofxOpenSteerVehicle::ofxOpenSteerVehicle(){
     proximityDB = NULL;
 	proximityToken = NULL;
 	path = NULL;
+    color = gGray30;
     reset();
 }
 ofxOpenSteerVehicle::~ofxOpenSteerVehicle(){
@@ -31,8 +32,7 @@ void ofxOpenSteerVehicle::update(float curTime, float elapsedTime){
 	recordTrailVertex (curTime, position());	
 }
 void ofxOpenSteerVehicle::draw(){    
-	
-	drawBasic3dSphericalVehicle (*this, gGray30);
+	drawBasic3dSphericalVehicle (*this, color);
 	annotationVelocityAcceleration ();
 	drawTrail();
 }
@@ -51,10 +51,10 @@ ProximityToken* ofxOpenSteerVehicle::getProximityToken(){
 	return proximityToken;
 }
 
-void ofxOpenSteerVehicle::setPath(ofxOpenSteerPath* p){
+void ofxOpenSteerVehicle::setPath(SteerPath* p){
 	path = p;
 }
-ofxOpenSteerPath* ofxOpenSteerVehicle::getPath(){
+SteerPath* ofxOpenSteerVehicle::getPath(){
 	return path;
 }
 void ofxOpenSteerVehicle::unsetPath(){

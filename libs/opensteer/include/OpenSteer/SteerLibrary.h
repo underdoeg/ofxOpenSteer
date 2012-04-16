@@ -1042,7 +1042,7 @@ steerForEvasion (const AbstractVehicle& menace,
                  const float maxPredictionTime)
 {
     // offset from this to menace, that distance, unit vector toward menace
-    const Vec3 offset = menace.position - position;
+    const Vec3 offset = menace.position() - position();
     const float distance = offset.length ();
 
     const float roughTime = distance / menace.speed();

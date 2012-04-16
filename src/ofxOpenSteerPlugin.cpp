@@ -21,7 +21,7 @@ ofxOpenSteerPlugin::~ofxOpenSteerPlugin(){
 void ofxOpenSteerPlugin::setup(){
 	createProximityDatabase();
 }
-void ofxOpenSteerPlugin::setup(ofxOpenSteerProximityDatabaseSettings pdSettings){
+void ofxOpenSteerPlugin::setup(ProximityDatabaseSettings pdSettings){
 	setProximityDatabaseSettings(pdSettings);
 	setup();
 }
@@ -30,18 +30,18 @@ void ofxOpenSteerPlugin::update(){
 	update(ofGetElapsedTimef(), 1.f/ofGetFrameRate());
 }
 void ofxOpenSteerPlugin::update(float currentTime, float elapsedTime){
-	updatePhaseActive = true; //XXX ideally should be moved to main app's events, kepping it here so app can be cleaner. it's safe while single threaded
-	for (vehicleIterator i = vehicles.begin(); i != vehicles.end(); i++) {
+	updatePhaseActive = true; //XXX ideally should be moved to main app's events, kepping it here so app can be cleaner. it's only safe while single threaded
+	for (VehicleIterator i = vehicles.begin(); i != vehicles.end(); i++) {
 		(*i)->update (currentTime, elapsedTime);
 	}
-	updatePhaseActive = false; //XXX ideally should be moved to main app's events, kepping it here so app can be cleaner. it's safe while single threaded
+	updatePhaseActive = false; //XXX ideally should be moved to main app's events, kepping it here so app can be cleaner. it's only safe while single threaded
 }
 void ofxOpenSteerPlugin::draw(){
-	drawPhaseActive = true; //XXX ideally should be moved to main app's events, kepping it here so app can be cleaner. it's safe while single threaded
-	for (vehicleIterator i = vehicles.begin(); i != vehicles.end(); i++) {
+	drawPhaseActive = true; //XXX ideally should be moved to main app's events, kepping it here so app can be cleaner. it's only safe while single threaded
+	for (VehicleIterator i = vehicles.begin(); i != vehicles.end(); i++) {
 		(*i)->draw();
 	}
-	drawPhaseActive = false; //XXX ideally should be moved to main app's events, kepping it here so app can be cleaner. it's safe while single threaded
+	drawPhaseActive = false; //XXX ideally should be moved to main app's events, kepping it here so app can be cleaner. it's only safe while single threaded
 }
 void ofxOpenSteerPlugin::exit(){
 	// delete the proximity database
@@ -56,18 +56,17 @@ void ofxOpenSteerPlugin::exit(){
 	}
 }
 
-void ofxOpenSteerPlugin::addVehicle(ofxOpenSteerVehicle* v, bool reset){
+void ofxOpenSteerPlugin::addVehicle(ofxOpenSteerVehicle* v){
 	v->setProximityDatabase(proximityDB);
-	if(reset) v->reset();
 	vehicles.push_back(v);
 }
 void ofxOpenSteerPlugin::removeVehicle(ofxOpenSteerVehicle* v){
 	vehicles.erase(std::remove(vehicles.begin(), vehicles.end(), v), vehicles.end());
 }
-vehicleList ofxOpenSteerPlugin::getVehicles(){
+VehicleGroup ofxOpenSteerPlugin::getVehicles(){
 	return vehicles;
 }
-void ofxOpenSteerPlugin::setProximityDatabaseSettings(ofxOpenSteerProximityDatabaseSettings pdSettings){
+void ofxOpenSteerPlugin::setProximityDatabaseSettings(ProximityDatabaseSettings pdSettings){
 	this->pdSettings.center = pdSettings.center;
 	this->pdSettings.divX = pdSettings.divX;
 	this->pdSettings.divY = pdSettings.divY;

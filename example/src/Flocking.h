@@ -19,6 +19,7 @@ class Flocking: public ofxOpenSteerPlugin {
 			
             for(unsigned int i=0;i<300;i++){
                 Boid* v = new Boid();
+                v->reset();
                 addVehicle(v);
             }
         };

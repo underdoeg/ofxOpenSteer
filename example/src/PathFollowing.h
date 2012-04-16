@@ -8,6 +8,7 @@ using namespace ofxOpenSteer;
 
 // Extend the flocking boid adding path following behaviour
 class PathBoid: public Boid {
+public:
 	
 	void reset(){
 		// reset the vehicle
@@ -38,7 +39,7 @@ class PathFollowing: public ofxOpenSteerPlugin {
 public:
 	
 	ofPath circle;
-	ofxOpenSteerPath* path;
+	SteerPath* path;
 	
 	string name(){ return "Path Following"; };
 	
@@ -57,6 +58,7 @@ public:
 		
 		for(unsigned int i=0;i<100;i++){
 			PathBoid* v = new PathBoid();
+            v->reset();
 			v->setPath(path);
 			addVehicle(v);
 		}

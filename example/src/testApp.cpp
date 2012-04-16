@@ -17,6 +17,7 @@ void testApp::setup(){
 	simulations.push_back(&flocking);
 	simulations.push_back(&pathFollowing);
 	simulations.push_back(&obstacleAvoidance);
+    simulations.push_back(&pursuitAndEvade);
 	
 	currentSimulation = NULL;
 	setSimulation(0);
