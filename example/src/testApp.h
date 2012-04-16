@@ -1,8 +1,9 @@
 #pragma once
 
 #include "ofMain.h"
-#include "Plugin.h"
-#include "Vehicle.h"
+#include "Flocking.h"
+#include "PathFollowing.h"
+#include "ObstacleAvoidance.h"
 
 class testApp : public ofBaseApp{
 
@@ -10,6 +11,16 @@ class testApp : public ofBaseApp{
 		void setup();
 		void update();
 		void draw();
+		void keyPressed( int key );
+		void setSimulation( int simulationIndex );
     
-        Plugin plugin;
+		ofEasyCam cam;
+	
+        Flocking flocking;
+		PathFollowing pathFollowing;
+		ObstacleAvoidance obstacleAvoidance;
+	
+		vector<ofxOpenSteerPlugin*> simulations;
+		ofxOpenSteerPlugin* currentSimulation;
+		int simulationIndex;
 };

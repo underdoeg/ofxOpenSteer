@@ -29,7 +29,6 @@
 		38C4E06C1538517800AD897E /* TerrainRayTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 38C4E0571538517800AD897E /* TerrainRayTest.cpp */; };
 		38C4E06D1538517800AD897E /* Vec3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 38C4E0591538517800AD897E /* Vec3.cpp */; };
 		38C4E06E1538517800AD897E /* Vec3Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 38C4E05A1538517800AD897E /* Vec3Utilities.cpp */; };
-		38C4E0731538676300AD897E /* Vehicle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 38C4E0721538676300AD897E /* Vehicle.cpp */; };
 		BBAB23CB13894F3D00AA2426 /* GLUT.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
 		E4328149138ABC9F0047C5CB /* openFrameworksDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4328148138ABC890047C5CB /* openFrameworksDebug.a */; };
 		E45BE97B0E8CC7DD009D7055 /* AGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9710E8CC7DD009D7055 /* AGL.framework */; };
@@ -81,13 +80,16 @@
 
 /* Begin PBXFileReference section */
 		381E40391537170C00D30D94 /* ofxOpenSteerTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxOpenSteerTypes.h; sourceTree = "<group>"; };
-		381E405D15371A1C00D30D94 /* Vehicle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vehicle.h; sourceTree = "<group>"; };
 		3858C1D5153833880028A470 /* ofxOpenSteerUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxOpenSteerUtils.h; sourceTree = "<group>"; };
 		3858C1D615383FB30028A470 /* ofxOpenSteerVehicle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxOpenSteerVehicle.cpp; sourceTree = "<group>"; };
 		3858C1D715383FB30028A470 /* ofxOpenSteerVehicle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxOpenSteerVehicle.h; sourceTree = "<group>"; };
 		3858C1D9153844DA0028A470 /* ofxOpenSteerPlugin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxOpenSteerPlugin.cpp; sourceTree = "<group>"; };
 		3858C1DA153844DA0028A470 /* ofxOpenSteerPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxOpenSteerPlugin.h; sourceTree = "<group>"; };
 		3858C1DC153845480028A470 /* ofxOpenSteer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxOpenSteer.h; sourceTree = "<group>"; };
+		38A349B0153B397700C06A7A /* Flocking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Flocking.h; sourceTree = "<group>"; };
+		38A349B2153B67E100C06A7A /* PathFollowing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PathFollowing.h; sourceTree = "<group>"; };
+		38A349B3153B71FA00C06A7A /* Boid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Boid.h; sourceTree = "<group>"; };
+		38A349B4153B8BB600C06A7A /* ObstacleAvoidance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObstacleAvoidance.h; sourceTree = "<group>"; };
 		38C4E0241538517800AD897E /* AbstractVehicle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AbstractVehicle.h; sourceTree = "<group>"; };
 		38C4E0251538517800AD897E /* Annotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Annotation.h; sourceTree = "<group>"; };
 		38C4E0261538517800AD897E /* Camera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Camera.h; sourceTree = "<group>"; };
@@ -142,8 +144,6 @@
 		38C4E0581538517800AD897E /* TerrainRayTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TerrainRayTest.h; sourceTree = "<group>"; };
 		38C4E0591538517800AD897E /* Vec3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Vec3.cpp; sourceTree = "<group>"; };
 		38C4E05A1538517800AD897E /* Vec3Utilities.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Vec3Utilities.cpp; sourceTree = "<group>"; };
-		38C4E0701538598100AD897E /* Plugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Plugin.h; sourceTree = "<group>"; };
-		38C4E0721538676300AD897E /* Vehicle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Vehicle.cpp; sourceTree = "<group>"; };
 		BBAB23BE13894E4700AA2426 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = ../../../libs/glut/lib/osx/GLUT.framework; sourceTree = "<group>"; };
 		E4328143138ABC890047C5CB /* openFrameworksLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openFrameworksLib.xcodeproj; path = ../../../libs/openFrameworksCompiled/project/osx/openFrameworksLib.xcodeproj; sourceTree = SOURCE_ROOT; };
 		E45BE9710E8CC7DD009D7055 /* AGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AGL.framework; path = /System/Library/Frameworks/AGL.framework; sourceTree = "<absolute>"; };
@@ -380,9 +380,10 @@
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
 				E4B69E1E0A3A1BDC003C02F2 /* testApp.cpp */,
 				E4B69E1F0A3A1BDC003C02F2 /* testApp.h */,
-				381E405D15371A1C00D30D94 /* Vehicle.h */,
-				38C4E0721538676300AD897E /* Vehicle.cpp */,
-				38C4E0701538598100AD897E /* Plugin.h */,
+				38A349B3153B71FA00C06A7A /* Boid.h */,
+				38A349B0153B397700C06A7A /* Flocking.h */,
+				38A349B2153B67E100C06A7A /* PathFollowing.h */,
+				38A349B4153B8BB600C06A7A /* ObstacleAvoidance.h */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -507,7 +508,6 @@
 				38C4E06C1538517800AD897E /* TerrainRayTest.cpp in Sources */,
 				38C4E06D1538517800AD897E /* Vec3.cpp in Sources */,
 				38C4E06E1538517800AD897E /* Vec3Utilities.cpp in Sources */,
-				38C4E0731538676300AD897E /* Vehicle.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

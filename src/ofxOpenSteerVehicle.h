@@ -15,11 +15,7 @@ class ofxOpenSteerVehicle: public OpenSteer::SimpleVehicle{
         virtual void update();
         virtual void update(float curTime, float elapsedTime);
         virtual void draw();    
-        virtual Vec3 getSteeringDirection(const float elapsedTime);
-    
-        virtual void setPosition(ofPoint position);
-        virtual void setPosition(float x, float y, float z=0);    
-        virtual ofPoint getPosition();
+        virtual Vec3 getSteeringForce(const float elapsedTime);
         
         virtual void setProximityDatabase(ProximityDatabase* db);
         virtual ProximityDatabase* getProximityDatabase();
@@ -29,8 +25,8 @@ class ofxOpenSteerVehicle: public OpenSteer::SimpleVehicle{
         virtual ofxOpenSteerPath* getPath();
         virtual void unsetPath();
             
-        virtual void addObstacle(ofxOpenSteerObstacle* o);
-        virtual void removeObstacle(ofxOpenSteerObstacle* o);
+        virtual void addObstacle(Obstacle* o);
+        virtual void removeObstacle(Obstacle* o);
         virtual ObstacleGroup getObstacles();
         
     protected:

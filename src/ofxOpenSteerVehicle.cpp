@@ -12,44 +12,36 @@ ofxOpenSteerVehicle::ofxOpenSteerVehicle(){
     reset();
 }
 ofxOpenSteerVehicle::~ofxOpenSteerVehicle(){
+	proximityDB = NULL;
+	path = NULL;
+	if(proximityToken) delete proximityToken;
 }
 
 void ofxOpenSteerVehicle::reset(){
-	SimpleVehicle::reset();    
+	SimpleVehicle::reset();  
+	clearTrailHistory();
 }
 void ofxOpenSteerVehicle::update(){
 	update(ofGetElapsedTimef(), 1.f/ofGetFrameRate());
 }
 void ofxOpenSteerVehicle::update(float curTime, float elapsedTime){
-	applySteeringForce (getSteeringDirection (elapsedTime), elapsedTime);
-	recordTrailVertex (curTime, position());
-	proximityToken->updateForNewPosition (position());
+	applySteeringForce (getSteeringForce (elapsedTime), elapsedTime);
+	if(proximityToken) proximityToken->updateForNewPosition (position());
+	
+	recordTrailVertex (curTime, position());	
 }
 void ofxOpenSteerVehicle::draw(){    
-	ofSetColor(255);
-	ofCircle(getPosition(), radius());
-	Vec3 f = forward() * radius();
-	Vec3 p = position();
-	Vec3 fp = f + p;
-	ofSetColor(0);
-	ofLine(p.x, p.y , fp.x, fp.y);
+	
+	drawBasic3dSphericalVehicle (*this, gGray30);
+	annotationVelocityAcceleration ();
+	drawTrail();
 }
-Vec3 ofxOpenSteerVehicle::getSteeringDirection(const float elapsedTime){
+Vec3 ofxOpenSteerVehicle::getSteeringForce(const float elapsedTime){
 	return Vec3(0, 0, 0);
 }
 
-void ofxOpenSteerVehicle::setPosition(ofPoint position){
-	setPosition(position.x, position.y, position.z);
-}
-void ofxOpenSteerVehicle::setPosition(float x, float y, float z){
-	SimpleVehicle::setPosition(Vec3(x, y, z));
-}
-ofPoint ofxOpenSteerVehicle::getPosition(){
-	return toOf(position());
-}
-
 void ofxOpenSteerVehicle::setProximityDatabase(ProximityDatabase* db){
-	proximityDB=db;
+	proximityDB = db;
 	proximityToken = proximityDB->allocateToken (this);
 }
 ProximityDatabase* ofxOpenSteerVehicle::getProximityDatabase(){
@@ -69,10 +61,10 @@ void ofxOpenSteerVehicle::unsetPath(){
 	path = NULL;
 }
 
-void ofxOpenSteerVehicle::addObstacle(ofxOpenSteerObstacle* o){
+void ofxOpenSteerVehicle::addObstacle(Obstacle* o){
 	obstacles.push_back(o);
 }
-void ofxOpenSteerVehicle::removeObstacle(ofxOpenSteerObstacle* o){
+void ofxOpenSteerVehicle::removeObstacle(Obstacle* o){
     obstacles.erase(std::remove(obstacles.begin(), obstacles.end(), o), obstacles.end());
 }
 ObstacleGroup ofxOpenSteerVehicle::getObstacles(){
