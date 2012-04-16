@@ -31,5 +31,17 @@
          landmarkName = "setup()"
          landmarkType = "5">
       </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "0"
+         filePath = "/Users/paulobarcelos/Lab/openFrameworks/addons/ofxOpenSteer/src/ofxOpenSteerVehicle.cpp"
+         timestampString = "356264668.818886"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "64"
+         endingLineNumber = "64">
+      </FileBreakpoint>
    </FileBreakpoints>
 </Bucket>

@@ -53,7 +53,7 @@ public:
     Vec3 target;
 	
 	float radius;
-	ofxOpenSteerSphereObstacle* obstacle;
+	SphereObstacle* obstacle;
 	
 	string name(){ return "Obstacle Avoidance"; };
 	
@@ -68,7 +68,7 @@ public:
 		
 		// Create the obstacle
 		radius = 10;		
-		obstacle = createSphereObstacle(ofPoint(), radius);
+		obstacle = new SphereObstacle(radius, Vec3::zero);
 		
 		for(unsigned int i=0;i<100;i++){
 			ObstacleBoid* v = new ObstacleBoid();

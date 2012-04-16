@@ -61,10 +61,10 @@ void ofxOpenSteerVehicle::unsetPath(){
 	path = NULL;
 }
 
-void ofxOpenSteerVehicle::addObstacle(ofxOpenSteerObstacle* o){
+void ofxOpenSteerVehicle::addObstacle(Obstacle* o){
 	obstacles.push_back(o);
 }
-void ofxOpenSteerVehicle::removeObstacle(ofxOpenSteerObstacle* o){
+void ofxOpenSteerVehicle::removeObstacle(Obstacle* o){
     obstacles.erase(std::remove(obstacles.begin(), obstacles.end(), o), obstacles.end());
 }
 ObstacleGroup ofxOpenSteerVehicle::getObstacles(){
