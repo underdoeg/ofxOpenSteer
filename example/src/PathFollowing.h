@@ -11,6 +11,14 @@ class PathBoid: public Boid {
 public:
     
     SteerPath* path;
+    
+    PathBoid(){
+        path = NULL;
+    };
+    
+    ~PathBoid(){
+        path = NULL;
+    };
 	
 	void reset(){
 		// reset the vehicle
@@ -26,6 +34,9 @@ public:
 	Vec3 getSteeringForce(const float elapsedTime){
 		// Inherit the flocking force
 		Vec3 flock = Boid::getSteeringForce(elapsedTime);
+        
+        // If there is no path, just flock
+        if(!path) return flock;
 		
 		// Get path following forces
 		Vec3 followPath = steerToFollowPath (1, 1.f, *path);		
@@ -68,7 +79,7 @@ public:
 		
 		for(unsigned int i=0;i<100;i++){
 			PathBoid* v = new PathBoid();
-            v->setPath(path);
+            v->path = path;
             v->pt = allocateProximityToken(pd, v);
             v->reset();
 			addVehicle(v);
