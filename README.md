@@ -13,3 +13,6 @@ This is quite an early stage so, for now, no instructions in here (the example a
 
 ### Obstacle Avoidance ###
 ![Obstacle Avoidance](https://github.com/paulobarcelos/ofxOpenSteer/raw/master/screenshots/Obstacle-Avoidance.png)
+
+### Pursuit and Evade ###
+![Pursuit and Evade](https://github.com/paulobarcelos/ofxOpenSteer/raw/master/screenshots/Pursuit-and-Evade.png)

@@ -4,26 +4,12 @@ using namespace OpenSteer;
 using namespace ofxOpenSteer;
 
 ofxOpenSteerPlugin::ofxOpenSteerPlugin(){
-	proximityDB = NULL;
-	
-	// default PD settings
-	pdSettings.center = Vec3();
-	pdSettings.divX = 20.f;
-	pdSettings.divY = 20.f;
-	pdSettings.divZ = 20.f;
-	pdSettings.diameter = ofGetWidth();
-	
-	setup();
+    setup();
 }
 ofxOpenSteerPlugin::~ofxOpenSteerPlugin(){
 	exit();
 }
 void ofxOpenSteerPlugin::setup(){
-	createProximityDatabase();
-}
-void ofxOpenSteerPlugin::setup(ProximityDatabaseSettings pdSettings){
-	setProximityDatabaseSettings(pdSettings);
-	setup();
 }
 
 void ofxOpenSteerPlugin::update(){
@@ -44,10 +30,6 @@ void ofxOpenSteerPlugin::draw(){
 	drawPhaseActive = false; //XXX ideally should be moved to main app's events, kepping it here so app can be cleaner. it's only safe while single threaded
 }
 void ofxOpenSteerPlugin::exit(){
-	// delete the proximity database
-	if(proximityDB) delete proximityDB;
-	proximityDB = NULL;
-	
 	// clear vehicles
 	while (vehicles.size() > 0){
 		const AbstractVehicle* v = (AbstractVehicle*)vehicles.back();
@@ -57,7 +39,6 @@ void ofxOpenSteerPlugin::exit(){
 }
 
 void ofxOpenSteerPlugin::addVehicle(ofxOpenSteerVehicle* v){
-	v->setProximityDatabase(proximityDB);
 	vehicles.push_back(v);
 }
 void ofxOpenSteerPlugin::removeVehicle(ofxOpenSteerVehicle* v){
@@ -66,20 +47,4 @@ void ofxOpenSteerPlugin::removeVehicle(ofxOpenSteerVehicle* v){
 VehicleGroup ofxOpenSteerPlugin::getVehicles(){
 	return vehicles;
 }
-void ofxOpenSteerPlugin::setProximityDatabaseSettings(ProximityDatabaseSettings pdSettings){
-	this->pdSettings.center = pdSettings.center;
-	this->pdSettings.divX = pdSettings.divX;
-	this->pdSettings.divY = pdSettings.divY;
-	this->pdSettings.divZ = pdSettings.divZ;
-	this->pdSettings.diameter = pdSettings.diameter;
-}
-
-void ofxOpenSteerPlugin::createProximityDatabase(){
-	const Vec3 divisions (pdSettings.divX, pdSettings.divY, pdSettings.divZ);
-	const Vec3 dimensions (pdSettings.diameter, pdSettings.diameter, pdSettings.diameter);
-	typedef LQProximityDatabase<AbstractVehicle*> LQPDAV;
-	proximityDB = new LQPDAV (pdSettings.center, dimensions, divisions);
-}
-
-
 

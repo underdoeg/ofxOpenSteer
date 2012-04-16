@@ -14,7 +14,6 @@ public:
 	
 	virtual string name(){ return "ofxOpenSteerPlugin"; };
 	virtual void setup();
-    virtual void setup(ProximityDatabaseSettings pdSettings);
 	virtual void update();
 	virtual void update(float currentTime, float elapsedTime);
 	virtual void draw();
@@ -27,12 +26,7 @@ public:
     virtual void addVehicle(ofxOpenSteerVehicle* v);
     virtual void removeVehicle(ofxOpenSteerVehicle* v);
     virtual VehicleGroup getVehicles();
-	
-	virtual void setProximityDatabaseSettings(ProximityDatabaseSettings pdSettings);
 
 protected:
 	VehicleGroup vehicles;
-	ProximityDatabase* proximityDB;
-	ProximityDatabaseSettings pdSettings;
-    void createProximityDatabase();
 };

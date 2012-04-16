@@ -11,6 +11,17 @@ class Boid: public ofxOpenSteerVehicle{
 	
 public:
     
+    ProximityToken* pt;
+    
+    Boid(){
+        pt = NULL;
+    };
+    
+    ~Boid(){
+        if(pt) delete pt;
+        pt = NULL;
+    };    
+    
     void reset(){
 		// reset the vehicle
 		ofxOpenSteerVehicle::reset ();
@@ -31,10 +42,18 @@ public:
 		setPosition (RandomVectorInUnitRadiusSphere() * 20);
 		
 		// notify proximity database that our position has changed
-		if(proximityToken) proximityToken->updateForNewPosition (position());
+		if(pt) pt->updateForNewPosition (position());
 	};
+    
+    void update(){
+        ofxOpenSteerVehicle::update();
+        if(pt) pt->updateForNewPosition (position());
+    };
 	
     Vec3 getSteeringForce(const float elapsedTime){
+        // if there is no proximity database, just wander
+        if(!pt) return steerForWander(elapsedTime);
+        
 		const float separationRadius =  5.0f;
 		const float separationAngle  = -0.707f;
 		const float separationWeight =  12.0f;
@@ -53,7 +72,7 @@ public:
 		
 		// find all flockmates within maxRadius using proximity database
 		neighbors.clear();
-		proximityToken->findNeighbors (position(), maxRadius, neighbors);
+		pt->findNeighbors (position(), maxRadius, neighbors);
 		
 		
 		// determine each of the three component behaviors of flocking
