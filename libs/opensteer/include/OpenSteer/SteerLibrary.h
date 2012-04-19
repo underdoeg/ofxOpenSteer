@@ -244,7 +244,12 @@ namespace OpenSteer {
 
         Vec3 steerForTargetSpeed (const float targetSpeed);
 
-
+        // ------------------------------------------------------------------------
+        //XXX 17-04-12 Paulo Barcelos: Extending the steer libray with other steerings proposed at http://www.red3d.com/cwr/steer/gdc99/
+        
+        // arrive in a target with speed 0
+        /*Vec3 steerForArrival (const Vec3& target, const float slowingDistance );*/
+        
         // ----------------------------------------------------------- utilities
         // XXX these belong somewhere besides the steering library
         // XXX above AbstractVehicle, below SimpleVehicle
@@ -1070,6 +1075,32 @@ steerForTargetSpeed (const float targetSpeed)
     const float speedError = targetSpeed - speed ();
     return forward () * clip (speedError, -mf, +mf);
 }
+
+
+//XXX 17-04-12 Paulo Barcelos: Extending the steer libray with other steerings proposed at http://www.red3d.com/cwr/steer/gdc99/
+
+// ----------------------------------------------------------------------------
+// Arrival behavior
+/*
+template<class Super>
+OpenSteer::Vec3
+OpenSteer::SteerLibraryMixin<Super>::
+steerForArrival (const Vec3& target, const float slowingDistance )
+{
+    
+    //const Vec3 targetOffset = target - position();
+    //const float distance = targetOffset.length();
+    //const float rampedSpeed = maxSpeed() * (distance / slowingDistance);
+    //printf("%f\n", (distance / slowingDistance));
+    //const float amout = minXXX( (distance / slowingDistance), 1.f );
+    //const float clippedSpeed = minXXX (rampedSpeed, maxSpeed());
+    //const Vec3 desiredVelocity = (clippedSpeed / distance) * targetOffset;
+    //return (desiredVelocity - velocity()) * 0;
+    
+    const float distance = Vec3::distance(target, position());
+    const float amount = minXXX( (distance / slowingDistance), 1.f );    
+    return steerForSeek(target) * amount;
+}*/
 
 
 // ----------------------------------------------------------------------------
