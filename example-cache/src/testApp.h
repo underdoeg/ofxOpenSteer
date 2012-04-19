@@ -15,6 +15,6 @@ class testApp : public ofBaseApp{
 		ofEasyCam cam;
 	
 		ObstacleAvoidance plugin;
-        ofxOpenSteerPluginCacher recorder;
+        ofxOpenSteerPluginCacher cacher;
         int currentFrame;
 };
