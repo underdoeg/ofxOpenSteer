@@ -5,7 +5,7 @@
 using namespace OpenSteer;
 using namespace ofxOpenSteer;
 
-class ofxOpenSteerVehicle: public OpenSteer::SimpleVehicle{
+class ofxOpenSteerVehicle: public SimpleVehicle{
 
     public:
         ofxOpenSteerVehicle();
