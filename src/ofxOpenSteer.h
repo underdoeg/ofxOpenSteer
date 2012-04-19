@@ -6,4 +6,4 @@
 #include "ofxOpenSteerUtils.h"
 #include "ofxOpenSteerPlugin.h"
 #include "ofxOpenSteerVehicle.h"
-#include "ofxOpenSteerPluginRecorder.h"
+#include "ofxOpenSteerPluginCacher.h"

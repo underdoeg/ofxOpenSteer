@@ -86,7 +86,7 @@ public:
         // Create a proximity database with default settings
         pd = createProximityDatabase();
 		
-		for(unsigned int i=0; i<5000; i++){
+		for(unsigned int i=0; i<1000; i++){
 			ObstacleBoid* v = new ObstacleBoid();
             v->pt = allocateProximityToken(pd, v);
             v->origin = &origin;

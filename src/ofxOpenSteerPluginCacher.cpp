@@ -1,16 +1,16 @@
-#include "ofxOpenSteerPluginRecorder.h"
+#include "ofxOpenSteerPluginCacher.h"
 
-ofxOpenSteerPluginRecorder::ofxOpenSteerPluginRecorder(){
+ofxOpenSteerPluginCacher::ofxOpenSteerPluginCacher(){
     plugin = NULL;
     fps = 0;
     frameDuration = 0;
 }
-ofxOpenSteerPluginRecorder::~ofxOpenSteerPluginRecorder(){
+ofxOpenSteerPluginCacher::~ofxOpenSteerPluginCacher(){
     plugin = NULL;
     clear();
 }
 
-void ofxOpenSteerPluginRecorder::record(ofxOpenSteerPlugin* plugin, int frameDuration, float fps){
+void ofxOpenSteerPluginCacher::cache(ofxOpenSteerPlugin* plugin, int frameDuration, float fps){
     clear();
     this->plugin = plugin;
     this->frameDuration = frameDuration;
@@ -20,7 +20,9 @@ void ofxOpenSteerPluginRecorder::record(ofxOpenSteerPlugin* plugin, int frameDur
     plugin->exit();
     plugin->setup();
     
-    cout << "Started recording process for " << plugin->name() << "(" << ofToString(frameDuration) << " frames at " << ofToString(fps) << " FPS)" << endl;
+    cout << "Caching \"" << plugin->name() << "\" for " << ofToString(frameDuration) << " frames at " << ofToString(fps) << " FPS:" << endl;
+    
+    float estimated = ofGetElapsedTimef();
     
     stringstream ss;
 	ss << plugin->name() << "_" << ofToString(frameDuration) << "_" << ofToString(fps);    
@@ -35,19 +37,27 @@ void ofxOpenSteerPluginRecorder::record(ofxOpenSteerPlugin* plugin, int frameDur
         cout << "Unable to load simulation." << endl;
         saveSettings();
 	}
+       
+    cout << endl << "Caching complete! The process took: ";
+    estimated = ofGetElapsedTimef() - estimated;
+    if(estimated < 60.f){
+        cout << ofToString(estimated) << " seconds." << endl;
+    }
+    else{
+        cout << ofToString(estimated/60.f) << " minutes." << endl;
+    }
     
-    cout << endl << "Recording process complete!" << endl;
     
     // "Rewind" the plugin
     update(0);
 }
 
-void ofxOpenSteerPluginRecorder::clear(){
+void ofxOpenSteerPluginCacher::clear(){
     while(frames.size() > 0){
-        ofxOpenSteerPluginRecorderFrame* frame = frames.back();
+        ofxOpenSteerPluginCacherFrame* frame = frames.back();
         
         while (frame->units.size() > 0) {
-            ofxOpenSteerPluginRecorderFrameUnit* unit = frame->units.back();
+            ofxOpenSteerPluginCacherFrameUnit* unit = frame->units.back();
             delete unit;
             unit = NULL;
             frame->units.pop_back();
@@ -59,14 +69,14 @@ void ofxOpenSteerPluginRecorder::clear(){
     }
 }
 
-void ofxOpenSteerPluginRecorder::update(int frame){
+void ofxOpenSteerPluginCacher::update(int frame){
     if(!plugin)return;
     int f = ofClamp(frame, 0, frameDuration - 1);
     VehicleGroup vehicles = plugin->getVehicles();
     int unitIndex = 0;
     float curTime = (float)f * fps;
     for (VehicleIterator it = vehicles.begin(); it != vehicles.end(); it++) {
-        ofxOpenSteerPluginRecorderFrameUnit* unit = frames[f]->units[unitIndex];
+        ofxOpenSteerPluginCacherFrameUnit* unit = frames[f]->units[unitIndex];
         (*it)->setSide(unit->side);
         (*it)->setUp(unit->up);
         (*it)->setForward(unit->forward);
@@ -78,7 +88,7 @@ void ofxOpenSteerPluginRecorder::update(int frame){
     
 }
 
-void ofxOpenSteerPluginRecorder::loadSettings(){
+void ofxOpenSteerPluginCacher::loadSettings(){
     cout << "Loading: " << endl;
     
 	vector <string> frameData;
@@ -96,12 +106,12 @@ void ofxOpenSteerPluginRecorder::loadSettings(){
         string frameLine = frameData[i];
         vector <string> unitData = ofSplitString(frameLine, "_");
         
-        ofxOpenSteerPluginRecorderFrame* frame = new ofxOpenSteerPluginRecorderFrame();
+        ofxOpenSteerPluginCacherFrame* frame = new ofxOpenSteerPluginCacherFrame();
         
         VehicleGroup vehicles = plugin->getVehicles();
         int j = 0;
         for (VehicleIterator it = vehicles.begin(); it != vehicles.end(); it++) {
-            ofxOpenSteerPluginRecorderFrameUnit* unit = new ofxOpenSteerPluginRecorderFrameUnit();
+            ofxOpenSteerPluginCacherFrameUnit* unit = new ofxOpenSteerPluginCacherFrameUnit();
             
             // Get from to xml
             string unitLine = unitData[j];            
@@ -146,13 +156,22 @@ void ofxOpenSteerPluginRecorder::loadSettings(){
             lastPercent = percent;
             float currentProcessTime = ofGetElapsedTimef();
             float dt = currentProcessTime - lastProcessTime;
+            lastProcessTime = currentProcessTime;
             float estimated = dt * (float)(frameDuration-1 - i);
-            cout << ofToString(percent) << "% - Estimated time remaining: " << ofToString(dt/60.f) << " minutes" << endl;
+            
+            cout << ofToString(percent) << "% - Estimated time remaining: ";
+            if(estimated < 60.f){
+                cout << ofToString(estimated) << " seconds" << endl;
+            }
+            else{
+                cout << ofToString(estimated/60.f) << " minutes" << endl;
+            }
+            
         }        
     }
 }
 
-void ofxOpenSteerPluginRecorder::saveSettings(){
+void ofxOpenSteerPluginCacher::saveSettings(){
     cout << "Recording: " << endl;
     
     settings.create();
@@ -162,16 +181,16 @@ void ofxOpenSteerPluginRecorder::saveSettings(){
     float currentTime = 0;
     float elapsedTime = 1.f/fps;
     int lastPercent = -1;
-    float lastTime = ofGetElapsedTimef();
+    float lastProcessTime = ofGetElapsedTimef();
     for (int i = 0; i < frameDuration; i++) {
         currentTime += elapsedTime;
         plugin->update(currentTime, elapsedTime);
         
-        ofxOpenSteerPluginRecorderFrame* frame = new ofxOpenSteerPluginRecorderFrame();
+        ofxOpenSteerPluginCacherFrame* frame = new ofxOpenSteerPluginCacherFrame();
         
         VehicleGroup vehicles = plugin->getVehicles();
         for (VehicleIterator it = vehicles.begin(); it != vehicles.end(); it++) {
-            ofxOpenSteerPluginRecorderFrameUnit* unit = new ofxOpenSteerPluginRecorderFrameUnit();
+            ofxOpenSteerPluginCacherFrameUnit* unit = new ofxOpenSteerPluginCacherFrameUnit();
             
             // Save to memory
             unit->side = (*it)->side();
@@ -233,8 +252,17 @@ void ofxOpenSteerPluginRecorder::saveSettings(){
             lastPercent = percent;
             float currentProcessTime = ofGetElapsedTimef();
             float dt = currentProcessTime - lastProcessTime;
+            lastProcessTime = currentProcessTime;
             float estimated = dt * (float)(frameDuration-1 - i);
-            cout << ofToString(percent) << "% - Estimated time remaining: " << ofToString(dt/60.f) << " minutes" << endl;
+                        
+            cout << ofToString(percent) << "% - Estimated time remaining: ";
+            if(estimated < 60.f){
+               cout << ofToString(estimated) << " seconds" << endl;
+            }
+            else{
+                cout << ofToString(estimated/60.f) << " minutes" << endl;
+            }
+            
         }        
     }
     settings.close();

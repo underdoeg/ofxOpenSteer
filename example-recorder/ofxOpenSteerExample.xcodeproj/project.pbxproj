@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3833F256153F37B600FE2719 /* ofxOpenSteerPluginRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3833F254153F37B600FE2719 /* ofxOpenSteerPluginRecorder.cpp */; };
+		3804CC95153FFEBC00E52B13 /* ofxOpenSteerPluginCacher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3804CC93153FFEBC00E52B13 /* ofxOpenSteerPluginCacher.cpp */; };
 		3858C1D815383FB40028A470 /* ofxOpenSteerVehicle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3858C1D615383FB30028A470 /* ofxOpenSteerVehicle.cpp */; };
 		3858C1DB153844DA0028A470 /* ofxOpenSteerPlugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3858C1D9153844DA0028A470 /* ofxOpenSteerPlugin.cpp */; };
 		38C4E05B1538517800AD897E /* Camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 38C4E0461538517800AD897E /* Camera.cpp */; };
@@ -80,9 +80,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3804CC93153FFEBC00E52B13 /* ofxOpenSteerPluginCacher.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxOpenSteerPluginCacher.cpp; sourceTree = "<group>"; };
+		3804CC94153FFEBC00E52B13 /* ofxOpenSteerPluginCacher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxOpenSteerPluginCacher.h; sourceTree = "<group>"; };
 		381E40391537170C00D30D94 /* ofxOpenSteerTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxOpenSteerTypes.h; sourceTree = "<group>"; };
-		3833F254153F37B600FE2719 /* ofxOpenSteerPluginRecorder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxOpenSteerPluginRecorder.cpp; sourceTree = "<group>"; };
-		3833F255153F37B600FE2719 /* ofxOpenSteerPluginRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxOpenSteerPluginRecorder.h; sourceTree = "<group>"; };
 		3858C1D5153833880028A470 /* ofxOpenSteerUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxOpenSteerUtils.h; sourceTree = "<group>"; };
 		3858C1D615383FB30028A470 /* ofxOpenSteerVehicle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxOpenSteerVehicle.cpp; sourceTree = "<group>"; };
 		3858C1D715383FB30028A470 /* ofxOpenSteerVehicle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxOpenSteerVehicle.h; sourceTree = "<group>"; };
@@ -230,8 +230,8 @@
 				3858C1DA153844DA0028A470 /* ofxOpenSteerPlugin.h */,
 				3858C1D615383FB30028A470 /* ofxOpenSteerVehicle.cpp */,
 				3858C1D715383FB30028A470 /* ofxOpenSteerVehicle.h */,
-				3833F254153F37B600FE2719 /* ofxOpenSteerPluginRecorder.cpp */,
-				3833F255153F37B600FE2719 /* ofxOpenSteerPluginRecorder.h */,
+				3804CC93153FFEBC00E52B13 /* ofxOpenSteerPluginCacher.cpp */,
+				3804CC94153FFEBC00E52B13 /* ofxOpenSteerPluginCacher.h */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -509,7 +509,7 @@
 				38C4E06C1538517800AD897E /* TerrainRayTest.cpp in Sources */,
 				38C4E06D1538517800AD897E /* Vec3.cpp in Sources */,
 				38C4E06E1538517800AD897E /* Vec3Utilities.cpp in Sources */,
-				3833F256153F37B600FE2719 /* ofxOpenSteerPluginRecorder.cpp in Sources */,
+				3804CC95153FFEBC00E52B13 /* ofxOpenSteerPluginCacher.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

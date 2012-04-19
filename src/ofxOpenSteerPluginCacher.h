@@ -1,6 +1,6 @@
 /**
 * This is totally experimental! Should work fine for simple plugins
-* where the number of vehicles is constant during the whole simualtion.
+* where the number of vehicles is constant during the whole simulation.
 * Use at your own risk!
 **/ 
 
@@ -11,7 +11,7 @@
 using namespace OpenSteer;
 using namespace ofxOpenSteer;
 
-struct ofxOpenSteerPluginRecorderFrameUnit{
+struct ofxOpenSteerPluginCacherFrameUnit{
     Vec3 side;
     Vec3 up;
     Vec3 forward;
@@ -20,18 +20,18 @@ struct ofxOpenSteerPluginRecorderFrameUnit{
     float speed;
 };
 
-struct ofxOpenSteerPluginRecorderFrame{
-    vector<ofxOpenSteerPluginRecorderFrameUnit*> units;
+struct ofxOpenSteerPluginCacherFrame{
+    vector<ofxOpenSteerPluginCacherFrameUnit*> units;
 };
 
 class ofxOpenSteerPlugin; //forward declaration
-class ofxOpenSteerPluginRecorder {
+class ofxOpenSteerPluginCacher {
 
 public:
-	ofxOpenSteerPluginRecorder();
-	~ofxOpenSteerPluginRecorder();
+	ofxOpenSteerPluginCacher();
+	~ofxOpenSteerPluginCacher();
 	
-	void record(ofxOpenSteerPlugin* plugin, int frameDuration, float = 60.f);
+	void cache(ofxOpenSteerPlugin* plugin, int frameDuration, float = 60.f);
     void clear(); 
     void update(int frame);
     
@@ -43,7 +43,7 @@ protected:
     void loadSettings();
     void saveSettings();
     
-    vector<ofxOpenSteerPluginRecorderFrame*> frames;
+    vector<ofxOpenSteerPluginCacherFrame*> frames;
 	ofxOpenSteerPlugin* plugin;
     int frameDuration;
     float fps;

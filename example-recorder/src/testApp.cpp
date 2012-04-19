@@ -6,8 +6,8 @@ void testApp::setup(){
 	glEnable(GL_DEPTH_TEST);
 	cam.setDistance(50);
     
-    // record the simulation
-    recorder.record(&plugin, 300, 60.f); // pointer to simulation, duration (in frames), fps
+    // cache the simulation
+    recorder.cache(&plugin, 300, 60.f); // pointer to simulation, duration (in frames), fps
     currentFrame = 0;
 }
 
