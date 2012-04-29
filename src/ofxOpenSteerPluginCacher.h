@@ -31,7 +31,7 @@ public:
 	ofxOpenSteerPluginCacher();
 	~ofxOpenSteerPluginCacher();
 	
-	void cache(ofxOpenSteerPlugin* plugin, int frameDuration, float = 60.f);
+	void cache(ofxOpenSteerPlugin* plugin, int frameDuration, int startFrame = 0, float = 60.f);
     void clear(); 
     void update(int frame);
     
@@ -46,6 +46,7 @@ protected:
     vector<ofxOpenSteerPluginCacherFrame*> frames;
 	ofxOpenSteerPlugin* plugin;
     int frameDuration;
+    int startFrame;
     float fps;
     ofFile settings;
     string settingsPath;

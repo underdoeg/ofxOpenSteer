@@ -4,28 +4,30 @@ ofxOpenSteerPluginCacher::ofxOpenSteerPluginCacher(){
     plugin = NULL;
     fps = 0;
     frameDuration = 0;
+    startFrame = 0;
 }
 ofxOpenSteerPluginCacher::~ofxOpenSteerPluginCacher(){
     plugin = NULL;
     clear();
 }
 
-void ofxOpenSteerPluginCacher::cache(ofxOpenSteerPlugin* plugin, int frameDuration, float fps){
+void ofxOpenSteerPluginCacher::cache(ofxOpenSteerPlugin* plugin, int frameDuration, int startFrame, float fps){
     clear();
     this->plugin = plugin;
     this->frameDuration = frameDuration;
+    this->startFrame = startFrame;
     this->fps = fps;
     
     // Reset the plugin
     plugin->exit();
     plugin->setup();
     
-    cout << "Caching \"" << plugin->name() << "\" for " << ofToString(frameDuration) << " frames at " << ofToString(fps) << " FPS:" << endl;
+    cout << "Caching \"" << plugin->name() << "\" for " << ofToString(frameDuration) << " frames (starting from frame " << ofToString(startFrame) << ") at " << ofToString(fps) << " FPS:" << endl;
     
     float estimated = ofGetElapsedTimef();
     
     stringstream ss;
-	ss << plugin->name() << "_" << ofToString(frameDuration) << "_" << ofToString(fps);    
+	ss << plugin->name() << "_" << ofToString(frameDuration) << "_" << ofToString(startFrame) << "_" << ofToString(fps);    
     settingsPath = ss.str();
     
     cout << "Checking if the simulation was already saved at " << settingsPath << "..." << endl;
@@ -182,6 +184,14 @@ void ofxOpenSteerPluginCacher::saveSettings(){
     float elapsedTime = 1.f/fps;
     int lastPercent = -1;
     float lastProcessTime = ofGetElapsedTimef();
+    
+    // "Forward" to the startFrame
+    for (int i = 0; i < startFrame; i++) {
+        cout << "Forwarding to start frame: (" << ofToString(i) << "/" << ofToString(startFrame) << ")" << endl;        
+        currentTime += elapsedTime;
+        plugin->update(currentTime, elapsedTime);
+    }
+    
     for (int i = 0; i < frameDuration; i++) {
         currentTime += elapsedTime;
         plugin->update(currentTime, elapsedTime);

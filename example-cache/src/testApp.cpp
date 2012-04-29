@@ -7,7 +7,7 @@ void testApp::setup(){
 	cam.setDistance(50);
     
     // cache the simulation
-    cacher.cache(&plugin, 300, 60.f); // pointer to simulation, duration (in frames), fps
+    cacher.cache(&plugin, 300, 150, 60.f); // pointer to simulation, duration (in frames), start frame, fps
     currentFrame = 0;
 }
 
