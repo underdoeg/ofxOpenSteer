@@ -7,7 +7,16 @@ void testApp::setup(){
 	cam.setDistance(50);
     
     // cache the simulation
-    cacher.cache(&plugin, 300, 150, 60.f); // pointer to simulation, duration (in frames), start frame, fps
+    ofxOpenSteerPluginCacherSettings cacherSettings;
+    // these are default settings (everything true) and can be ommited.
+    // just listed them here so you know you can cache just a few properties too
+    cacherSettings.position = true;
+    cacherSettings.up = true;
+    cacherSettings.side = true;
+    cacherSettings.forward = true;
+    cacherSettings.smoothedAcceleration = true;
+    cacherSettings.speed = true;
+    cacher.cache(&plugin, 300, 150, 60.f, cacherSettings); // pointer to simulation, duration (in frames), start frame, fps, settings
     currentFrame = 0;
 }
 

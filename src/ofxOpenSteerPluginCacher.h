@@ -1,7 +1,7 @@
 /**
-* This is totally experimental! Should work fine for simple plugins
-* where the number of vehicles is constant during the whole simulation.
-* Use at your own risk!
+* This is totally experimental! Should work fine for  plugins where
+* the number of vehicles is constant during the whole simulation and
+* there aren't external inputs. Use at your own risk!
 **/ 
 
 #pragma once
@@ -20,9 +20,28 @@ struct ofxOpenSteerPluginCacherFrameUnit{
     float speed;
 };
 
+class ofxOpenSteerPluginCacherSettings{
+    public:
+    ofxOpenSteerPluginCacherSettings(){
+        side = true;
+        up = true;
+        forward = true;
+        position = true;
+        smoothedAcceleration = true;
+        speed = true;
+    }
+    bool side;
+    bool up;
+    bool forward;
+    bool position;
+    bool smoothedAcceleration;
+    bool speed;
+};
+
 struct ofxOpenSteerPluginCacherFrame{
     vector<ofxOpenSteerPluginCacherFrameUnit*> units;
 };
+
 
 class ofxOpenSteerPlugin; //forward declaration
 class ofxOpenSteerPluginCacher {
@@ -30,8 +49,9 @@ class ofxOpenSteerPluginCacher {
 public:
 	ofxOpenSteerPluginCacher();
 	~ofxOpenSteerPluginCacher();
-	
-	void cache(ofxOpenSteerPlugin* plugin, int frameDuration, int startFrame = 0, float = 60.f);
+    
+    
+	void cache(ofxOpenSteerPlugin* plugin, int frameDuration, int startFrame = 0, float = 60.f, ofxOpenSteerPluginCacherSettings settings = ofxOpenSteerPluginCacherSettings());
     void clear(); 
     void update(int frame);
     
@@ -48,6 +68,8 @@ protected:
     int frameDuration;
     int startFrame;
     float fps;
-    ofFile settings;
-    string settingsPath;
+    ofFile file;
+    string filePath;
+    
+    ofxOpenSteerPluginCacherSettings settings;
 };

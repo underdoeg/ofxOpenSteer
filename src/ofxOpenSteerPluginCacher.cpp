@@ -5,34 +5,58 @@ ofxOpenSteerPluginCacher::ofxOpenSteerPluginCacher(){
     fps = 0;
     frameDuration = 0;
     startFrame = 0;
-}
+}    
 ofxOpenSteerPluginCacher::~ofxOpenSteerPluginCacher(){
     plugin = NULL;
     clear();
 }
 
-void ofxOpenSteerPluginCacher::cache(ofxOpenSteerPlugin* plugin, int frameDuration, int startFrame, float fps){
+void ofxOpenSteerPluginCacher::cache(ofxOpenSteerPlugin* plugin, int frameDuration, int startFrame, float fps, ofxOpenSteerPluginCacherSettings settings){
     clear();
     this->plugin = plugin;
     this->frameDuration = frameDuration;
     this->startFrame = startFrame;
     this->fps = fps;
     
+    this->settings.up = settings.up;
+    this->settings.side = settings.side;
+    this->settings.forward = settings.forward;
+    this->settings.position = settings.position;
+    this->settings.smoothedAcceleration = settings.smoothedAcceleration;
+    this->settings.speed = settings.speed;
+    
     // Reset the plugin
     plugin->exit();
     plugin->setup();
     
-    cout << "Caching \"" << plugin->name() << "\" for " << ofToString(frameDuration) << " frames (starting from frame " << ofToString(startFrame) << ") at " << ofToString(fps) << " FPS:" << endl;
+    cout << "Caching \"" << plugin->name() << "\" for " << ofToString(frameDuration) << " frames (starting from frame " << ofToString(startFrame) << ") at " << ofToString(fps) << " FPS," << endl;
+    
+    cout << "with settings: \""
+    << ((settings.up) ? "up " : "")
+    << ((settings.side) ? "side " : "")
+    << ((settings.forward) ? "forward " : "")
+    << ((settings.position) ? "position " : "")
+    << ((settings.smoothedAcceleration) ? "smoothed acceleration " : "")
+    << ((settings.speed) ? "speed " : "") << endl;
     
     float estimated = ofGetElapsedTimef();
     
     stringstream ss;
-	ss << plugin->name() << "_" << ofToString(frameDuration) << "_" << ofToString(startFrame) << "_" << ofToString(fps);    
-    settingsPath = ss.str();
+	ss << plugin->name()
+    << "_" << ofToString(frameDuration)
+    << "_" << ofToString(startFrame)
+    << "_" << ofToString(fps)
+    << ((settings.up) ? "_up" : "")
+    << ((settings.side) ? "_sd" : "")
+    << ((settings.forward) ? "_frw" : "")
+    << ((settings.position) ? "_pos" : "")
+    << ((settings.smoothedAcceleration) ? "_sa" : "")
+    << ((settings.speed) ? "_spd" : "");
+    filePath = ss.str();
     
-    cout << "Checking if the simulation was already saved at " << settingsPath << "..." << endl;
+    cout << "Checking if the simulation was already saved at " << filePath << "..." << endl;
         
-    if( settings.open(settingsPath, ofFile::ReadWrite) ){
+    if( file.open(filePath, ofFile::ReadWrite) ){
 		cout << "Simulation found!" << endl;
         loadSettings();
 	}else{
@@ -79,12 +103,12 @@ void ofxOpenSteerPluginCacher::update(int frame){
     float curTime = (float)f * fps;
     for (VehicleIterator it = vehicles.begin(); it != vehicles.end(); it++) {
         ofxOpenSteerPluginCacherFrameUnit* unit = frames[f]->units[unitIndex];
-        (*it)->setSide(unit->side);
-        (*it)->setUp(unit->up);
-        (*it)->setForward(unit->forward);
-        (*it)->setPosition(unit->position);
-        (*it)->setSpeed(unit->speed);
-        (*it)->resetSmoothedAcceleration(unit->smoothedAcceleration);
+        if(settings.side) (*it)->setSide(unit->side);
+        if(settings.up)(*it)->setUp(unit->up);
+        if(settings.forward)(*it)->setForward(unit->forward);
+        if(settings.position)(*it)->setPosition(unit->position);
+        if(settings.speed)(*it)->setSpeed(unit->speed);
+        if(settings.smoothedAcceleration)(*it)->resetSmoothedAcceleration(unit->smoothedAcceleration);
         unitIndex++;
     }
     
@@ -94,12 +118,12 @@ void ofxOpenSteerPluginCacher::loadSettings(){
     cout << "Loading: " << endl;
     
 	vector <string> frameData;
-	while (!settings.eof()) {
+	while (!file.eof()) {
 		string frameLine;
-		getline(settings, frameLine);
+		getline(file, frameLine);
 		frameData.push_back(frameLine);
 	}
-	settings.close();
+	file.close();
 	
     int lastPercent = -1;
     float lastProcessTime = ofGetElapsedTimef();
@@ -119,33 +143,45 @@ void ofxOpenSteerPluginCacher::loadSettings(){
             string unitLine = unitData[j];            
             vector <string> cordinateData = ofSplitString(unitLine, "|");
             
-            vector <string> sideData = ofSplitString(cordinateData[0], ",");            
-            unit->side.x = ofToFloat(sideData[0]);
-            unit->side.y = ofToFloat(sideData[1]);
-            unit->side.z = ofToFloat(sideData[2]);
+            if(settings.side){
+                vector <string> sideData = ofSplitString(cordinateData[0], ",");            
+                unit->side.x = ofToFloat(sideData[0]);
+                unit->side.y = ofToFloat(sideData[1]);
+                unit->side.z = ofToFloat(sideData[2]);
+            }
             
-            vector <string> upData = ofSplitString(cordinateData[1], ",");            
-            unit->up.x = ofToFloat(upData[0]);
-            unit->up.y = ofToFloat(upData[1]);
-            unit->up.z = ofToFloat(upData[2]);
+            if(settings.up){
+                vector <string> upData = ofSplitString(cordinateData[1], ",");            
+                unit->up.x = ofToFloat(upData[0]);
+                unit->up.y = ofToFloat(upData[1]);
+                unit->up.z = ofToFloat(upData[2]);
+            }
             
-            vector <string> forwardData = ofSplitString(cordinateData[2], ",");            
-            unit->forward.x = ofToFloat(forwardData[0]);
-            unit->forward.y = ofToFloat(forwardData[1]);
-            unit->forward.z = ofToFloat(forwardData[2]);
+            if(settings.forward){
+                vector <string> forwardData = ofSplitString(cordinateData[2], ",");            
+                unit->forward.x = ofToFloat(forwardData[0]);
+                unit->forward.y = ofToFloat(forwardData[1]);
+                unit->forward.z = ofToFloat(forwardData[2]);
+            }
             
-            vector <string> positionData = ofSplitString(cordinateData[3], ",");            
-            unit->position.x = ofToFloat(positionData[0]);
-            unit->position.y = ofToFloat(positionData[1]);
-            unit->position.z = ofToFloat(positionData[2]);
+            if(settings.position){
+                vector <string> positionData = ofSplitString(cordinateData[3], ",");            
+                unit->position.x = ofToFloat(positionData[0]);
+                unit->position.y = ofToFloat(positionData[1]);
+                unit->position.z = ofToFloat(positionData[2]);
+            }
             
-            vector <string> smoothedAccelerationData = ofSplitString(cordinateData[4], ",");            
-            unit->smoothedAcceleration.x = ofToFloat(smoothedAccelerationData[0]);
-            unit->smoothedAcceleration.y = ofToFloat(smoothedAccelerationData[1]);
-            unit->smoothedAcceleration.z = ofToFloat(smoothedAccelerationData[2]);
+            if(settings.smoothedAcceleration){
+                vector <string> smoothedAccelerationData = ofSplitString(cordinateData[4], ",");            
+                unit->smoothedAcceleration.x = ofToFloat(smoothedAccelerationData[0]);
+                unit->smoothedAcceleration.y = ofToFloat(smoothedAccelerationData[1]);
+                unit->smoothedAcceleration.z = ofToFloat(smoothedAccelerationData[2]);
+            }
             
-            vector <string> speedData = ofSplitString(cordinateData[5], ",");            
-            unit->speed = ofToFloat(speedData[0]);        
+            if(settings.speed){
+                vector <string> speedData = ofSplitString(cordinateData[5], ",");            
+                unit->speed = ofToFloat(speedData[0]);
+            }
             
             frame->units.push_back(unit);
             
@@ -176,9 +212,9 @@ void ofxOpenSteerPluginCacher::loadSettings(){
 void ofxOpenSteerPluginCacher::saveSettings(){
     cout << "Recording: " << endl;
     
-    settings.create();
-    settings.open(settingsPath, ofFile::ReadWrite);
-    settings.clear();
+    file.create();
+    file.open(filePath, ofFile::ReadWrite);
+    file.clear();
        
     float currentTime = 0;
     float elapsedTime = 1.f/fps;
@@ -214,48 +250,54 @@ void ofxOpenSteerPluginCacher::saveSettings(){
             // Save to file
             
             // side
-            settings << unit->side.x << ",";
-            settings << unit->side.y << ",";
-            settings << unit->side.z << ",";
-            settings << "|";
-            
+            if(settings.side){
+                file << unit->side.x << ",";
+                file << unit->side.y << ",";
+                file << unit->side.z << ",";
+                file << "|";
+            }
             // up
-            settings << unit->up.x << ",";
-            settings << unit->up.y << ",";
-            settings << unit->up.z << ",";
-            settings << "|";
-            
-            // forward
-            settings << unit->forward.x << ",";
-            settings << unit->forward.y << ",";
-            settings << unit->forward.z << ",";
-            settings << "|";
-            
-            // position
-            settings << unit->position.x << ",";
-            settings << unit->position.y << ",";
-            settings << unit->position.z << ",";
-            settings << "|";
-            
-            // smoothedAcceleration
-            settings << unit->smoothedAcceleration.x << ",";
-            settings << unit->smoothedAcceleration.y << ",";
-            settings << unit->smoothedAcceleration.z << ",";
-            settings << "|";
-            
-            // speed
-            settings << unit->speed << ",";
-            settings << "|";
-            
+            if(settings.up){  
+                file << unit->up.x << ",";
+                file << unit->up.y << ",";
+                file << unit->up.z << ",";
+                file << "|";
+            }
+            if(settings.forward){
+                // forward
+                file << unit->forward.x << ",";
+                file << unit->forward.y << ",";
+                file << unit->forward.z << ",";
+                file << "|";
+            }
+            if(settings.position){
+                // position
+                file << unit->position.x << ",";
+                file << unit->position.y << ",";
+                file << unit->position.z << ",";
+                file << "|";
+            }
+            if(settings.smoothedAcceleration){
+                // smoothedAcceleration
+                file << unit->smoothedAcceleration.x << ",";
+                file << unit->smoothedAcceleration.y << ",";
+                file << unit->smoothedAcceleration.z << ",";
+                file << "|";
+            }
+            if(settings.speed){
+                // speed
+                file << unit->speed << ",";
+                file << "|";
+            }
             
             // unit delimiter
-            settings << "_";
+            file << "_";
             
         }
         frames.push_back(frame);
         
         // frame delimiter
-        settings << "\n";
+        file << "\n";
         
         int percent = ((float)i/(float)(frameDuration-1)) * 100;
         if (percent != lastPercent) {
@@ -275,5 +317,5 @@ void ofxOpenSteerPluginCacher::saveSettings(){
             
         }        
     }
-    settings.close();
+    file.close();
 }
