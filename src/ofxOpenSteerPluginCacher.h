@@ -11,35 +11,23 @@
 using namespace OpenSteer;
 using namespace ofxOpenSteer;
 
-struct ofxOpenSteerPluginCacherFrameUnit{
-    Vec3 side;
-    Vec3 up;
-    Vec3 forward;
-    Vec3 position;
-    Vec3 smoothedAcceleration;
+struct ofxOpenSteerPluginCacherUnit{
+    float side[3];
+    float up[3];
+    float forward[3];
+    float position[3];
+    float smoothedAcceleration[3];
     float speed;
 };
 
-class ofxOpenSteerPluginCacherSettings{
-    public:
-    ofxOpenSteerPluginCacherSettings(){
-        side = true;
-        up = true;
-        forward = true;
-        position = true;
-        smoothedAcceleration = true;
-        speed = true;
-    }
-    bool side;
-    bool up;
-    bool forward;
-    bool position;
-    bool smoothedAcceleration;
-    bool speed;
+struct ofxOpenSteerPluginCacherFrame{
+    int size;
+    ofxOpenSteerPluginCacherUnit* units;
 };
 
-struct ofxOpenSteerPluginCacherFrame{
-    vector<ofxOpenSteerPluginCacherFrameUnit*> units;
+struct ofxOpenSteerPluginCacherCache{
+    int size;
+    ofxOpenSteerPluginCacherFrame* frames;
 };
 
 
@@ -51,7 +39,7 @@ public:
 	~ofxOpenSteerPluginCacher();
     
     
-	void cache(ofxOpenSteerPlugin* plugin, int frameDuration, int startFrame = 0, float = 60.f, ofxOpenSteerPluginCacherSettings settings = ofxOpenSteerPluginCacherSettings());
+	void cache(ofxOpenSteerPlugin* plugin, int frameDuration, int startFrame = 0, float = 60.f);
     void clear(); 
     void update(int frame);
     
@@ -60,16 +48,13 @@ public:
 
 protected:
     
-    void loadSettings();
-    void saveSettings();
+    void fillCache();
     
-    vector<ofxOpenSteerPluginCacherFrame*> frames;
+    ofxOpenSteerPluginCacherCache _cache;
 	ofxOpenSteerPlugin* plugin;
     int frameDuration;
     int startFrame;
     float fps;
-    ofFile file;
-    string filePath;
     
-    ofxOpenSteerPluginCacherSettings settings;
+    string filePath;
 };

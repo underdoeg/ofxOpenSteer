@@ -57,5 +57,73 @@
          landmarkName = "setup()"
          landmarkType = "5">
       </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "0"
+         filePath = "/Users/paulobarcelos/Lab/openFrameworks/addons/ofxOpenSteer/src/ofxOpenSteerPluginCacher.cpp"
+         timestampString = "358188799.987793"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "66"
+         endingLineNumber = "66"
+         landmarkName = "ofxOpenSteerPluginCacher::cache(ofxOpenSteerPlugin* plugin, int frameDuration, int startFrame, float fps)"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "0"
+         filePath = "/Users/paulobarcelos/Lab/openFrameworks/addons/ofxOpenSteer/src/ofxOpenSteerPluginCacher.cpp"
+         timestampString = "358188799.987793"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "47"
+         endingLineNumber = "47"
+         landmarkName = "ofxOpenSteerPluginCacher::cache(ofxOpenSteerPlugin* plugin, int frameDuration, int startFrame, float fps)"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "1"
+         filePath = "src/testApp.cpp"
+         timestampString = "358189620.71267"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "34"
+         endingLineNumber = "34"
+         landmarkName = "testApp::setup()"
+         landmarkType = "5">
+         <Locations>
+            <Location
+               shouldBeEnabled = "No"
+               ignoreCount = "0"
+               continueAfterRunningActions = "No"
+               symbolName = "OpenSteer::Vec3::Vec3(float, float, float)"
+               urlString = "file://localhost/testApp.cpp"
+               timestampString = "358188829.603063"
+               startingColumnNumber = "9223372036854775807"
+               endingColumnNumber = "9223372036854775807"
+               startingLineNumber = "36"
+               endingLineNumber = "36">
+            </Location>
+            <Location
+               shouldBeEnabled = "No"
+               ignoreCount = "0"
+               continueAfterRunningActions = "No"
+               symbolName = "testApp::setup()"
+               urlString = "file://localhost/testApp.cpp"
+               timestampString = "358188829.603408"
+               startingColumnNumber = "9223372036854775807"
+               endingColumnNumber = "9223372036854775807"
+               startingLineNumber = "36"
+               endingLineNumber = "36">
+            </Location>
+         </Locations>
+      </FileBreakpoint>
    </FileBreakpoints>
 </Bucket>
