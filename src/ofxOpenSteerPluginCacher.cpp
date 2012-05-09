@@ -5,6 +5,7 @@ ofxOpenSteerPluginCacher::ofxOpenSteerPluginCacher(){
     fps = 0;
     frameDuration = 0;
     startFrame = 0;
+    _cache = NULL;
 }    
 ofxOpenSteerPluginCacher::~ofxOpenSteerPluginCacher(){
     plugin = NULL;
@@ -22,7 +23,7 @@ void ofxOpenSteerPluginCacher::cache(ofxOpenSteerPlugin* plugin, int frameDurati
     plugin->exit();
     plugin->setup();
     
-    cout << "Caching \"" << plugin->name() << "\" for " << ofToString(frameDuration) << " frames (starting from frame " << ofToString(startFrame) << ") at " << ofToString(fps) << " FPS," << endl;
+    cout << "Caching \"" << plugin->name() << "\" for " << ofToString(frameDuration) << " frames (starting from frame " << ofToString(startFrame) << ") at " << ofToString(fps) << " FPS:" << endl;
 
     
     float estimated = ofGetElapsedTimef();
@@ -40,13 +41,11 @@ void ofxOpenSteerPluginCacher::cache(ofxOpenSteerPlugin* plugin, int frameDurati
     cout << "Checking if the simulation was already saved at " << filePath << "..." << endl;
     ofFile readFile;
     if( readFile.open(filePath, ofFile::ReadOnly, true) ){
-		cout << "Simulation found!" << endl;
+		cout << "Simulation found!";
         
-        memcpy( &_cache, readFile.readToBuffer().getBinaryBuffer(), readFile.getSize() );
-
-        for (int i = 0; i < _cache.size; i++) {
-            cout << "Frame size" << _cache.frames[i].size << endl;
-        }
+        cacheSize = frameDuration * plugin->getVehicles().size() * OFX_OPENSTEER_PLUGIN_CACHER_UNIT_SIZE;
+        _cache = (float*)malloc(readFile.getSize());
+        memcpy( _cache, readFile.readToBuffer().getBinaryBuffer(), readFile.getSize() );      
         
 	}else{
         
@@ -56,10 +55,7 @@ void ofxOpenSteerPluginCacher::cache(ofxOpenSteerPlugin* plugin, int frameDurati
         ofFile writeFile;
         
         if(writeFile.open(filePath, ofFile::WriteOnly, true)){
-            writeFile.write((char*) &_cache, 
-                       sizeof(ofxOpenSteerPluginCacherCache)
-                       + sizeof(ofxOpenSteerPluginCacherFrame) * 1000
-                       + sizeof(ofxOpenSteerPluginCacherUnit) * 100000 * 1000 );  
+            writeFile.write((char*) _cache, sizeof(float) * cacheSize );  
         }
 	}
        
@@ -78,7 +74,9 @@ void ofxOpenSteerPluginCacher::cache(ofxOpenSteerPlugin* plugin, int frameDurati
 }
 
 void ofxOpenSteerPluginCacher::clear(){
-    _cache = ofxOpenSteerPluginCacherCache();
+    if(_cache) delete [] _cache;
+    _cache = NULL;
+    cacheSize = 0;
 }
 
 void ofxOpenSteerPluginCacher::update(int frame){
@@ -88,27 +86,12 @@ void ofxOpenSteerPluginCacher::update(int frame){
     int j = 0;
     for (VehicleIterator it = vehicles.begin(); it != vehicles.end(); it++) {
         
-        (*it)->setSide(Vec3(_cache.frames[i].units[j].side[0],
-                            _cache.frames[i].units[j].side[1],
-                            _cache.frames[i].units[j].side[2]));
-        
-        (*it)->setUp(Vec3(_cache.frames[i].units[j].up[0],
-                          _cache.frames[i].units[j].up[1],
-                          _cache.frames[i].units[j].up[2]));
-        
-        (*it)->setForward(Vec3(_cache.frames[i].units[j].forward[0],
-                               _cache.frames[i].units[j].forward[1],
-                               _cache.frames[i].units[j].forward[2]));
-        
-        (*it)->setPosition(Vec3(_cache.frames[i].units[j].position[0],
-                                _cache.frames[i].units[j].position[1],
-                                _cache.frames[i].units[j].position[2]));
-        
-        (*it)->setSpeed(_cache.frames[i].units[j].speed);
-        
-        (*it)->resetSmoothedAcceleration(Vec3(_cache.frames[i].units[j].side[0],
-                                              _cache.frames[i].units[j].side[1],
-                                              _cache.frames[i].units[j].side[2]));
+        (*it)->setSide(getSide(i,j));        
+        (*it)->setUp(getUp(i,j));        
+        (*it)->setForward(getForward(i,j));        
+        (*it)->setPosition(getPosition(i,j));        
+        (*it)->setSpeed(getSpeed(i,j));        
+        (*it)->resetSmoothedAcceleration(getSmoothedAcceleration(i,j));
         
         j++;
     }
@@ -130,41 +113,23 @@ void ofxOpenSteerPluginCacher::fillCache(){
         plugin->update(currentTime, elapsedTime);
     }
     
-    _cache.size = frameDuration;
-    _cache.frames = new ofxOpenSteerPluginCacherFrame[_cache.size];
+    cacheSize = frameDuration * plugin->getVehicles().size() * OFX_OPENSTEER_PLUGIN_CACHER_UNIT_SIZE;
+    _cache = new float[cacheSize];
     
-    for(int i = 0; i < _cache.size; i++){
+    for(int i = 0; i < frameDuration; i++){
         currentTime += elapsedTime;
         plugin->update(currentTime, elapsedTime);
 
-        _cache.frames[i].size = plugin->getVehicles().size();
-        _cache.frames[i].units = new ofxOpenSteerPluginCacherUnit[_cache.frames[i].size];
-        
         int j = 0;
         VehicleGroup vehicles = plugin->getVehicles();
         for (VehicleIterator it = vehicles.begin(); it != vehicles.end(); it++) {
             
-            _cache.frames[i].units[j].side[0] = (*it)->side().x;
-            _cache.frames[i].units[j].side[1] = (*it)->side().y;
-            _cache.frames[i].units[j].side[2] = (*it)->side().z;
-            
-            _cache.frames[i].units[j].up[0] = (*it)->up().x;
-            _cache.frames[i].units[j].up[1] = (*it)->up().y;
-            _cache.frames[i].units[j].up[2] = (*it)->up().z;
-            
-            _cache.frames[i].units[j].forward[0] = (*it)->forward().x;
-            _cache.frames[i].units[j].forward[1] = (*it)->forward().y;
-            _cache.frames[i].units[j].forward[2] = (*it)->forward().z;
-            
-            _cache.frames[i].units[j].position[0] = (*it)->position().x;
-            _cache.frames[i].units[j].position[1] = (*it)->position().y;
-            _cache.frames[i].units[j].position[2] = (*it)->position().z;
-            
-            _cache.frames[i].units[j].smoothedAcceleration[0] = (*it)->smoothedAcceleration().x;
-            _cache.frames[i].units[j].smoothedAcceleration[1] = (*it)->smoothedAcceleration().y;
-            _cache.frames[i].units[j].smoothedAcceleration[2] = (*it)->smoothedAcceleration().z;
-            
-            _cache.frames[i].units[j].speed = (*it)->speed();
+            setSide(i, j, (*it)->side());
+            setUp(i, j, (*it)->up());
+            setForward(i, j, (*it)->forward());
+            setPosition(i, j, (*it)->position());
+            setSmoothedAcceleration(i, j, (*it)->smoothedAcceleration());
+            setSpeed(i, j, (*it)->speed());
             
             j ++;
         }
@@ -187,4 +152,74 @@ void ofxOpenSteerPluginCacher::fillCache(){
             
         }        
     }
+}
+
+void ofxOpenSteerPluginCacher::setVec3(int frame, int unit, int offset, Vec3 value){
+    int valueStartIndex = frame * plugin->getVehicles().size() * OFX_OPENSTEER_PLUGIN_CACHER_UNIT_SIZE
+    + unit * OFX_OPENSTEER_PLUGIN_CACHER_UNIT_SIZE
+    + offset;
+
+    _cache[valueStartIndex] = value.x;
+    _cache[valueStartIndex + 1] = value.y;
+    _cache[valueStartIndex + 2] = value.z;
+}
+void ofxOpenSteerPluginCacher::setFloat(int frame, int unit, int offset, float value){
+    int valueStartIndex = frame * plugin->getVehicles().size() * OFX_OPENSTEER_PLUGIN_CACHER_UNIT_SIZE
+    + unit * OFX_OPENSTEER_PLUGIN_CACHER_UNIT_SIZE
+    + offset;
+    
+    _cache[valueStartIndex] = value;
+}
+
+void ofxOpenSteerPluginCacher::setSide(int frame, int unit, Vec3 value){
+    setVec3(frame, unit, OFX_OPENSTEER_PLUGIN_CACHER_SIDE_OFFSET, value);
+}
+void ofxOpenSteerPluginCacher::setUp(int frame, int unit, Vec3 value){
+    setVec3(frame, unit, OFX_OPENSTEER_PLUGIN_CACHER_UP_OFFSET, value);
+}
+void ofxOpenSteerPluginCacher::setForward(int frame, int unit, Vec3 value){
+    setVec3(frame, unit, OFX_OPENSTEER_PLUGIN_CACHER_FORWARD_OFFSET, value);
+}
+void ofxOpenSteerPluginCacher::setPosition(int frame, int unit, Vec3 value){
+    setVec3(frame, unit, OFX_OPENSTEER_PLUGIN_CACHER_POSITION_OFFSET, value);
+}
+void ofxOpenSteerPluginCacher::setSmoothedAcceleration(int frame, int unit, Vec3 value){
+    setVec3(frame, unit, OFX_OPENSTEER_PLUGIN_CACHER_SMOOTHED_ACCELERATION_OFFSET, value);
+}
+void ofxOpenSteerPluginCacher::setSpeed(int frame, int unit, float value){
+    setFloat(frame, unit, OFX_OPENSTEER_PLUGIN_CACHER_SPEED_OFFSET, value);
+}
+
+Vec3 ofxOpenSteerPluginCacher::getVec3(int frame, int unit, int offset){
+    int valueStartIndex = frame * plugin->getVehicles().size() * OFX_OPENSTEER_PLUGIN_CACHER_UNIT_SIZE
+    + unit * OFX_OPENSTEER_PLUGIN_CACHER_UNIT_SIZE
+    + offset;
+    
+    return Vec3(_cache[valueStartIndex], _cache[valueStartIndex + 1], _cache[valueStartIndex + 2]);
+}
+float ofxOpenSteerPluginCacher::getFloat(int frame, int unit, int offset){
+    int valueStartIndex = frame * plugin->getVehicles().size() * OFX_OPENSTEER_PLUGIN_CACHER_UNIT_SIZE
+    + unit * OFX_OPENSTEER_PLUGIN_CACHER_UNIT_SIZE
+    + offset;
+    
+    return _cache[valueStartIndex];
+}
+
+Vec3 ofxOpenSteerPluginCacher::getSide(int frame, int unit){
+    return getVec3(frame, unit, OFX_OPENSTEER_PLUGIN_CACHER_SIDE_OFFSET);
+}
+Vec3 ofxOpenSteerPluginCacher::getUp(int frame, int unit){
+    return getVec3(frame, unit, OFX_OPENSTEER_PLUGIN_CACHER_UP_OFFSET);
+}
+Vec3 ofxOpenSteerPluginCacher::getForward(int frame, int unit){
+    return getVec3(frame, unit, OFX_OPENSTEER_PLUGIN_CACHER_FORWARD_OFFSET);
+}
+Vec3 ofxOpenSteerPluginCacher::getPosition(int frame, int unit){
+    return getVec3(frame, unit, OFX_OPENSTEER_PLUGIN_CACHER_POSITION_OFFSET);
+}
+Vec3 ofxOpenSteerPluginCacher::getSmoothedAcceleration(int frame, int unit){
+    return getVec3(frame, unit, OFX_OPENSTEER_PLUGIN_CACHER_SMOOTHED_ACCELERATION_OFFSET);
+}
+float ofxOpenSteerPluginCacher::getSpeed(int frame, int unit){
+    return getFloat(frame, unit, OFX_OPENSTEER_PLUGIN_CACHER_SPEED_OFFSET);
 }
