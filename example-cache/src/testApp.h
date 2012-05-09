@@ -4,6 +4,22 @@
 #include "ofxOpenSteer.h"
 #include "ObstacleAvoidance.h"
 
+
+struct Unit{
+    float number[3];
+};
+
+struct Frame{
+    Unit* units;
+    int size;
+};
+
+struct Cache{
+    Frame* frames;
+    int size;
+};
+
+
 class testApp : public ofBaseApp{
 
 	public:
