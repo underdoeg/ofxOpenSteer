@@ -11,25 +11,6 @@
 using namespace OpenSteer;
 using namespace ofxOpenSteer;
 
-struct ofxOpenSteerPluginCacherUnit{
-    float side[3];
-    float up[3];
-    float forward[3];
-    float position[3];
-    float smoothedAcceleration[3];
-    float speed;
-};
-
-struct ofxOpenSteerPluginCacherFrame{
-    int size;
-    ofxOpenSteerPluginCacherUnit* units;
-};
-
-struct ofxOpenSteerPluginCacherCache{
-    int size;
-    ofxOpenSteerPluginCacherFrame* frames;
-};
-
 #define OFX_OPENSTEER_PLUGIN_CACHER_UNIT_SIZE 16
 #define OFX_OPENSTEER_PLUGIN_CACHER_SIDE_OFFSET 0
 #define OFX_OPENSTEER_PLUGIN_CACHER_UP_OFFSET 3
