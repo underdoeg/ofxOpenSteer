@@ -9,7 +9,7 @@
 *~.nib
 *.xcuserstate
 *.xcworkspace
-*.xcuserdata
+xcuserdata
 
 # Windows
 *.ini

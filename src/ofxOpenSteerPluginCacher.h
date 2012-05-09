@@ -1,7 +1,7 @@
 /**
-* This is totally experimental! Should work fine for simple plugins
-* where the number of vehicles is constant during the whole simulation.
-* Use at your own risk!
+* This is totally experimental! Should work fine for  plugins where
+* the number of vehicles is constant during the whole simulation and
+* there aren't external inputs. Use at your own risk!
 **/ 
 
 #pragma once
@@ -11,18 +11,32 @@
 using namespace OpenSteer;
 using namespace ofxOpenSteer;
 
-struct ofxOpenSteerPluginCacherFrameUnit{
-    Vec3 side;
-    Vec3 up;
-    Vec3 forward;
-    Vec3 position;
-    Vec3 smoothedAcceleration;
+struct ofxOpenSteerPluginCacherUnit{
+    float side[3];
+    float up[3];
+    float forward[3];
+    float position[3];
+    float smoothedAcceleration[3];
     float speed;
 };
 
 struct ofxOpenSteerPluginCacherFrame{
-    vector<ofxOpenSteerPluginCacherFrameUnit*> units;
+    int size;
+    ofxOpenSteerPluginCacherUnit* units;
 };
+
+struct ofxOpenSteerPluginCacherCache{
+    int size;
+    ofxOpenSteerPluginCacherFrame* frames;
+};
+
+#define OFX_OPENSTEER_PLUGIN_CACHER_UNIT_SIZE 16
+#define OFX_OPENSTEER_PLUGIN_CACHER_SIDE_OFFSET 0
+#define OFX_OPENSTEER_PLUGIN_CACHER_UP_OFFSET 3
+#define OFX_OPENSTEER_PLUGIN_CACHER_FORWARD_OFFSET 6
+#define OFX_OPENSTEER_PLUGIN_CACHER_POSITION_OFFSET 9
+#define OFX_OPENSTEER_PLUGIN_CACHER_SMOOTHED_ACCELERATION_OFFSET 12
+#define OFX_OPENSTEER_PLUGIN_CACHER_SPEED_OFFSET 15
 
 class ofxOpenSteerPlugin; //forward declaration
 class ofxOpenSteerPluginCacher {
@@ -30,8 +44,9 @@ class ofxOpenSteerPluginCacher {
 public:
 	ofxOpenSteerPluginCacher();
 	~ofxOpenSteerPluginCacher();
-	
-	void cache(ofxOpenSteerPlugin* plugin, int frameDuration, float = 60.f);
+    
+    
+	void cache(ofxOpenSteerPlugin* plugin, int frameDuration, int startFrame = 0, float = 60.f);
     void clear(); 
     void update(int frame);
     
@@ -40,13 +55,32 @@ public:
 
 protected:
     
-    void loadSettings();
-    void saveSettings();
+    void setVec3(int frame, int unit, int offset, Vec3 value);
+    void setFloat(int frame, int unit, int offset, float value);
+    void setSide(int frame, int unit, Vec3 value);
+    void setUp(int frame, int unit, Vec3 value);
+    void setForward(int frame, int unit, Vec3 value);
+    void setPosition(int frame, int unit, Vec3 value);
+    void setSmoothedAcceleration(int frame, int unit, Vec3 value);
+    void setSpeed(int frame, int unit, float value);
     
-    vector<ofxOpenSteerPluginCacherFrame*> frames;
+    Vec3 getVec3(int frame, int unit, int offset);
+    float getFloat(int frame, int unit, int offset);
+    Vec3 getSide(int frame, int unit);
+    Vec3 getUp(int frame, int unit);
+    Vec3 getForward(int frame, int unit);
+    Vec3 getPosition(int frame, int unit);
+    Vec3 getSmoothedAcceleration(int frame, int unit);
+    float getSpeed(int frame, int unit);    
+    
+    void fillCache();
+    unsigned int cacheSize;
+    float* _cache;
+    
 	ofxOpenSteerPlugin* plugin;
     int frameDuration;
+    int startFrame;
     float fps;
-    ofFile settings;
-    string settingsPath;
+    
+    string filePath;
 };
