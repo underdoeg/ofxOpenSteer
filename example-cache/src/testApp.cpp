@@ -1,56 +1,6 @@
 #include "testApp.h"
 
 void testApp::setup(){
-    /*ifstream ifs(ofToDataPath("original").c_str(), ios::in | ios::binary);    
-     ifs.read((char *)&copy, sizeof(Cache) + sizeof(Frame)*nFrames + sizeof(Unit)*nUnits);*/
-    
-    /*int nUnits = 10;
-    int nFrames = 5;    
-    Cache original;
-    original.size = nFrames;
-    original.frames = new Frame[nFrames];
-    for(int i = 0; i < original.size; i++){
-        original.frames[i].size = nUnits;
-        original.frames[i].units = new Unit[nUnits];
-        for(int j = 0; j < original.frames[i].size; j++){
-            original.frames[i].units[j].number[0] = i+j+1;
-            original.frames[i].units[j].number[1] = i+j+2;
-            original.frames[i].units[j].number[2] = i+j+3;
-        }
-    }
-    
-    ofFile file;
-    if(file.open("original", ofFile::WriteOnly, true)){
-        file.write((char*) &original, sizeof(Cache) + sizeof(Frame)*nFrames + sizeof(Unit) * nUnits * nFrames);  
-    }
-    file.close();
-    
-    Cache copy;    
-    ofFile copyFile;
-    if(copyFile.open("original", ofFile::ReadOnly, true)){
-        memcpy( &copy, copyFile.readToBuffer().getBinaryBuffer(), copyFile.getSize() );
-    }
-    
-    cout << "Num Frames " << copy.size <<  endl;
-    
-    
-    for(int i = 0; i < copy.size; i++){
-        cout << "----------- Frame " << i <<  endl;
-        cout << "Num Units " << copy.frames[i].size <<  endl;
-        for(int j = 0; j < copy.frames[i].size; j++){
-            cout << "--- Unit " << j <<  endl;
-            cout  << copy.frames[i].units[j].number[0] <<  endl;
-            cout  << copy.frames[i].units[j].number[1] <<  endl;
-            cout  << copy.frames[i].units[j].number[2] <<  endl;
-        }
-    }*/
-    
-    
-    
-    
-    
-    
-    
 	ofSetVerticalSync(true);
 	ofEnableAlphaBlending();
 	glEnable(GL_DEPTH_TEST);

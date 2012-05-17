@@ -39,13 +39,15 @@ void ofxOpenSteerPluginCacher::cache(ofxOpenSteerPlugin* plugin, int frameDurati
     clear();
     
     cout << "Checking if the simulation was already saved at " << filePath << "..." << endl;
-    ofFile readFile;
-    if( readFile.open(filePath, ofFile::ReadOnly, true) ){
+    
+    fstream readFile;
+    readFile.open(ofToDataPath(filePath).c_str(), ios::in | ios::binary);
+    if(readFile.good()){
 		cout << "Simulation found!";
         
         cacheSize = frameDuration * plugin->getVehicles().size() * OFX_OPENSTEER_PLUGIN_CACHER_UNIT_SIZE;
-        _cache = (float*)malloc(readFile.getSize());
-        memcpy( _cache, readFile.readToBuffer().getBinaryBuffer(), readFile.getSize() );      
+        _cache = new float[cacheSize];
+        readFile.read((char*)_cache, sizeof(float) *  cacheSize);
         
 	}else{
         
