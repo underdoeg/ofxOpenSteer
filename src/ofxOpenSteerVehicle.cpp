@@ -31,3 +31,8 @@ void ofxOpenSteerVehicle::draw(){
 Vec3 ofxOpenSteerVehicle::getSteeringForce(const float elapsedTime){
 	return Vec3(0, 0, 0);
 }
+
+ofVec3f ofxOpenSteerVehicle::getPosition()
+{
+	return toOf(position());
+}
