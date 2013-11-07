@@ -19,6 +19,6 @@ class ofxOpenSteerVehicle: public SimpleVehicle{
 		ofVec3f getPosition();
 
     protected:
-        Color color; // XXX Just a convenience in case we want to use the default drawing method
+		OpenSteer::Color color; // XXX Just a convenience in case we want to use the default drawing method
         static AVGroup neighbors;
 };
